@@ -299,7 +299,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     }
 
     .edit-btn:hover, .share-btn:hover {
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #444;
       transform: translateY(-2px);
     }
 
@@ -397,7 +397,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     }
 
     .verify-btn:hover {
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #444;
     }
 
     .error-message {

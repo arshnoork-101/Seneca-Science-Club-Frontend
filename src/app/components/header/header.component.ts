@@ -27,7 +27,7 @@ import { Router } from '@angular/router';
             Articles
           </button>
           <button mat-button routerLink="/contact" routerLinkActive="active">
-            Contact
+            Contact Us
           </button>
         </nav>
 
@@ -182,7 +182,7 @@ import { Router } from '@angular/router';
     }
 
     .join-btn {
-      background:rgb(190, 59, 127);
+      background: transparent;
       color: white;
       padding: 12px 24px;
       border-radius: 4px;
@@ -190,8 +190,8 @@ import { Router } from '@angular/router';
       font-size: 0.9rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      transition: background-color 0.8s ease-in-out;
-      border: none;
+      transition: all 0.3s ease;
+      border: 2px solid rgb(190, 59, 127);
     }
 
     .join-btn:hover {

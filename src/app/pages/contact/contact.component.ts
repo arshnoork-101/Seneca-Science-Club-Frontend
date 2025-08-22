@@ -4,64 +4,81 @@ import { Component } from '@angular/core';
   selector: 'app-contact',
   template: `
     <div class="contact-container">
-      <!-- Science Background -->
-      <div class="science-background">
-        <div class="large-science-tool tool-1">🧪</div>
-        <div class="large-science-tool tool-2">🔬</div>
-        <div class="large-science-tool tool-3">⚗️</div>
-        <div class="large-science-tool tool-4">🔍</div>
-        <div class="large-science-tool tool-5">🧬</div>
-        <div class="large-science-tool tool-6">⚛️</div>
-        <div class="large-science-tool tool-7">🌡️</div>
-        <div class="large-science-tool tool-8">📊</div>
-        <div class="large-science-tool tool-9">🔭</div>
-        <div class="large-science-tool tool-10">💊</div>
-        <div class="large-science-tool tool-11">🧫</div>
-        <div class="large-science-tool tool-12">⚖️</div>
-        <div class="large-science-tool tool-13">🌌</div>
-        <div class="large-science-tool tool-14">🔋</div>
-        <div class="large-science-tool tool-15">🧲</div>
-        <div class="large-science-tool tool-16">📐</div>
+
+      <!-- Top Heading -->
+      <div class="connect-header">
+        <h1 class="connect-title">Let's Connect</h1>
+        <p class="connect-subtitle">
+          Whether you have questions, ideas, or just want to get involved — we’d love to hear from you.
+        </p>
       </div>
 
-      <!-- Hero Section -->
-      <section class="hero-section">
-        <div class="hero-content">
-          <div class="hero-visual">
-            <div class="contact-icon">📞</div>
-          </div>
-          <h1 class="hero-title">Contact Us</h1>
-          <p class="hero-subtitle">
-            We'd love to hear from you! Whether you have questions, ideas, or want to get involved, 
-            connect with us through any of our official platforms:
-          </p>
-        </div>
-      </section>
-
-      <!-- Contact Methods Section -->
       <section class="contact-methods">
         <div class="container">
-          <div class="contact-grid">
-            <div class="contact-card discord">
-              <div class="contact-icon-large">💬</div>
-              <h3>Discord</h3>
-              <p>Join our community server to stay updated and network with members.</p>
-              <a href="#" class="contact-btn">Join Discord</a>
+          <div class="contact-hybrid">
+
+            <!-- Social Links -->
+            <div class="social-section">
+              <h2 class="section-title">Stay Connected</h2>
+              <p class="section-subtitle">Reach out through our social platforms</p>
+              <div class="social-links">
+                <a href="#" class="social-link discord" target="_blank">
+                  <div class="social-icon">💬</div>
+                  <div class="social-info">
+                    <h3>Discord</h3>
+                    <p>Join our community server</p>
+                  </div>
+                </a>
+                <a href="#" class="social-link instagram" target="_blank">
+                  <div class="social-icon">📸</div>
+                  <div class="social-info">
+                    <h3>Instagram</h3>
+                    <p>Follow our latest updates</p>
+                  </div>
+                </a>
+                <a href="#" class="social-link linkedin" target="_blank">
+                  <div class="social-icon">💼</div>
+                  <div class="social-info">
+                    <h3>LinkedIn</h3>
+                    <p>Connect professionally</p>
+                  </div>
+                </a>
+              </div>
             </div>
             
-            <div class="contact-card instagram">
-              <div class="contact-icon-large">📸</div>
-              <h3>Instagram</h3>
-              <p>DM us for quick queries and event updates.</p>
-              <a href="#" class="contact-btn">Follow Us</a>
+            <!-- Contact Form -->
+            <div class="form-section">
+              <h2 class="section-title">Send Us a Message</h2>
+              <p class="section-subtitle">
+                Have a question, idea, or collaboration in mind? We'd love to hear from you.
+              </p>
+              <form class="contact-form" (ngSubmit)="submitForm()">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="contactForm.name" name="name" placeholder="Your Name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <input type="email" [(ngModel)]="contactForm.email" name="email" placeholder="Your Seneca Email" class="form-input" required>
+                </div>
+                <textarea 
+                  [(ngModel)]="contactForm.message" 
+                  name="message" 
+                  placeholder="Your Message" 
+                  class="form-input w-full h-32 resize-none" rows="5"  
+                  required>
+                </textarea>
+
+                <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+                  <span *ngIf="!isSubmitting">Send Message</span>
+                  <span *ngIf="isSubmitting">Sending...</span>
+                </button>
+              </form>
+
+              <div class="success-message" *ngIf="showSuccess">
+                <div class="success-icon">✅</div>
+                <p>Thanks! We'll get back to you soon.</p>
+              </div>
             </div>
-            
-            <div class="contact-card linkedin">
-              <div class="contact-icon-large">🔗</div>
-              <h3>LinkedIn</h3>
-              <p>Reach out for collaborations or professional connections.</p>
-              <a href="#" class="contact-btn">Connect</a>
-            </div>
+
           </div>
         </div>
       </section>
@@ -71,239 +88,194 @@ import { Component } from '@angular/core';
     .contact-container {
       background-color: #1a1a1a;
       color: #ffffff;
-      min-height: 100vh;
-      position: relative;
-      overflow: hidden;
+      padding: 60px 0;
     }
 
-    .science-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .large-science-tool {
-      position: absolute;
-      font-size: 7rem;
-      opacity: 0.15;
-      animation: floatAround 15s infinite linear;
-      transform-origin: center;
-      color: #333;
-    }
-
-    .tool-1 { top: 5%; left: 5%; animation-delay: 0s; }
-    .tool-2 { top: 5%; right: 5%; animation-delay: -2s; }
-    .tool-3 { top: 20%; left: 8%; animation-delay: -4s; }
-    .tool-4 { top: 20%; right: 8%; animation-delay: -6s; }
-    .tool-5 { top: 35%; left: 2%; animation-delay: -8s; }
-    .tool-6 { top: 35%; right: 2%; animation-delay: -10s; }
-    .tool-7 { top: 50%; left: 5%; animation-delay: -12s; }
-    .tool-8 { top: 50%; right: 5%; animation-delay: -14s; }
-    .tool-9 { top: 65%; left: 8%; animation-delay: -16s; }
-    .tool-10 { top: 65%; right: 8%; animation-delay: -18s; }
-    .tool-11 { top: 80%; left: 2%; animation-delay: -1s; }
-    .tool-12 { top: 80%; right: 2%; animation-delay: -3s; }
-    .tool-13 { top: 95%; left: 5%; animation-delay: -5s; }
-    .tool-14 { top: 95%; right: 5%; animation-delay: -7s; }
-    .tool-15 { top: 10%; left: 50%; animation-delay: -9s; }
-    .tool-16 { top: 90%; left: 50%; animation-delay: -11s; }
-
-    @keyframes floatAround {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      25% { transform: translateY(-20px) rotate(5deg); }
-      50% { transform: translateY(-10px) rotate(-5deg); }
-      75% { transform: translateY(-15px) rotate(3deg); }
-    }
-
-    /* Hero Section */
-    .hero-section {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1f1f1f 100%);
-    }
-
-    .hero-content {
+    /* New Connect Header */
+    .connect-header {
       text-align: center;
-      max-width: 800px;
-      padding: 0 20px;
-      animation: fadeInUp 1s ease-out;
+      margin-bottom: 50px;
     }
 
-    .hero-visual {
-      margin-bottom: 2rem;
+    .connect-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .contact-icon {
-      font-size: 6rem;
-      opacity: 0.9;
-      animation: pulse 2s infinite;
-    }
-
-    .hero-title {
-      font-size: 3.5rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 1.5rem;
-      line-height: 1.2;
-    }
-
-    .hero-subtitle {
-      font-size: 1.25rem;
+    .connect-subtitle {
       color: #b0b0b0;
-      line-height: 1.6;
-      max-width: 600px;
-      margin: 0 auto;
+      margin-top: 10px;
+      font-size: 1.1rem;
     }
 
-    /* Container */
+    .social-info h3{
+      color: white;
+    }
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
     }
 
-    /* Contact Methods Section */
-    .contact-methods {
-      padding: 80px 0;
-      background: #1a1a1a;
-      position: relative;
-      z-index: 2;
-    }
-
-    .contact-grid {
+    .contact-hybrid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 40px;
-      margin-top: 2rem;
     }
 
-    .contact-card {
-      background: linear-gradient(145deg, #2a2a2a 0%, #1f1f1f 100%);
+    .social-section, .form-section {
+      background: rgba(42, 42, 42, 0.9);
       border-radius: 20px;
-      padding: 40px 30px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
+      padding: 30px;
       border: 1px solid #333;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-subtitle {
+      color: #b0b0b0;
+      margin-bottom: 20px;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: linear-gradient(145deg, #333, #2a2a2a);
+      border-radius: 12px;
+      text-decoration: none;
+      color: #ffffff;
+      transition: 0.3s;
+      border: 1px solid #444;
+    }
+
+    .social-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .social-icon {
+      font-size: 2rem;
+      min-width: 50px;
       text-align: center;
     }
 
-    .contact-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      border-color: #555;
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
-    .contact-icon-large {
-      font-size: 4rem;
-      margin-bottom: 25px;
-      display: block;
-    }
-
-    .contact-card h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
+    .form-input, .form-textarea {
+      padding: 12px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      background: #1a1a1a;
       color: #ffffff;
-      margin-bottom: 15px;
+      font-size: 1rem;
     }
 
-    .contact-card p {
-      color: #cccccc;
-      line-height: 1.6;
-      margin-bottom: 25px;
-      font-size: 0.95rem;
+    .form-input:focus, .form-textarea:focus {
+      border-color: #06b6d4;
+      outline: none;
     }
 
-    .contact-btn {
-      background: linear-gradient(135deg, #333 0%, #555 100%);
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #06b6d4, #ff69b4);
       color: white;
       border: none;
-      padding: 12px 30px;
-      border-radius: 25px;
+      padding: 12px;
+      margin: 13px;
+      border-radius: 8px;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-block;
-      text-decoration: none;
+      transition: 0.3s;
     }
 
-    .contact-btn:hover {
+    .submit-btn:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-      background: linear-gradient(135deg, #444 0%, #666 100%);
-      text-decoration: none;
-      color: white;
     }
 
-    .discord:hover .contact-icon-large { filter: hue-rotate(240deg); }
-    .instagram:hover .contact-icon-large { filter: hue-rotate(300deg); }
-    .linkedin:hover .contact-icon-large { filter: hue-rotate(200deg); }
-
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
+    .success-message {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid #22c55e;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
     }
 
-    /* Responsive Design */
+    .success-message p {
+      margin: 0;
+      color: #22c55e;
+      font-weight: 500;
+    }
+
     @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.5rem;
-      }
-
-      .hero-subtitle {
-        font-size: 1.1rem;
-      }
-
-      .contact-grid {
+      .contact-hybrid {
         grid-template-columns: 1fr;
-        gap: 30px;
-      }
-
-      .contact-card {
-        padding: 30px 25px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hero-title {
-        font-size: 2rem;
-      }
-
-      .hero-subtitle {
-        font-size: 1rem;
-      }
-
-      .contact-icon {
-        font-size: 4rem;
-      }
-
-      .contact-icon-large {
-        font-size: 3rem;
       }
     }
   `]
 })
-export class ContactComponent {}
+export class ContactComponent {
+  contactForm = {
+    name: '',
+    email: '',
+    message: ''
+  };
+
+  isSubmitting = false;
+  showSuccess = false;
+
+  submitForm() {
+    if (!this.contactForm.name || !this.contactForm.email || !this.contactForm.message) {
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.showSuccess = true;
+
+      this.contactForm = { name: '', email: '', message: '' };
+
+      setTimeout(() => {
+        this.showSuccess = false;
+      }, 5000);
+    }, 1500);
+  }
+}

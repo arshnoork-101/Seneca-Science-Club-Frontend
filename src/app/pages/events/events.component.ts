@@ -25,6 +25,20 @@ import { Component, OnInit } from '@angular/core';
 
       <!-- Hero Section -->
       <section class="hero-section">
+        <div class="hero-background-icons">
+          <div class="hero-science-icon tool-1">🧪</div>
+          <div class="hero-science-icon tool-2">🔬</div>
+          <div class="hero-science-icon tool-3">⚗️</div>
+          <div class="hero-science-icon tool-4">🔍</div>
+          <div class="hero-science-icon tool-5">🧬</div>
+          <div class="hero-science-icon tool-6">⚛️</div>
+          <div class="hero-science-icon tool-7">🌡️</div>
+          <div class="hero-science-icon tool-8">📊</div>
+          <div class="hero-science-icon tool-9">🔭</div>
+          <div class="hero-science-icon tool-10">💊</div>
+          <div class="hero-science-icon tool-11">🧫</div>
+          <div class="hero-science-icon tool-12">⚖️</div>
+        </div>
         <div class="hero-content">
           <h1 class="hero-title">Discover, Learn, and Connect Through Science</h1>
           <p class="hero-subtitle">
@@ -38,6 +52,30 @@ import { Component, OnInit } from '@angular/core';
         </div>
       </section>
 
+          <!-- Why Attend Section -->
+    <section class="why-attend">
+      <div class="container">
+        <h2 class="section-title">Why Attend Our Events?</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">🧪</div>
+            <h3>Hands-On Experience</h3>
+            <p>Participate in experiments, workshops, and real-world projects that bring science to life.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🌍</div>
+            <h3>Networking Opportunities</h3>
+            <p>Connect with peers, faculty, and industry professionals in the scientific community.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🚀</div>
+            <h3>Career Growth</h3>
+            <p>Gain insights and inspiration from leading scientists and innovators in various fields.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <!-- Upcoming Events Section -->
     <section class="upcoming-events" id="upcoming-events">
       <div class="container">
@@ -97,54 +135,8 @@ import { Component, OnInit } from '@angular/core';
       </div>
     </section>
 
-    <!-- Why Attend Section -->
-    <section class="why-attend">
-      <div class="container">
-        <h2 class="section-title">Why Attend Our Events?</h2>
-        <div class="benefits-grid">
-          <div class="benefit-card">
-            <div class="benefit-icon">🧪</div>
-            <h3>Hands-On Experience</h3>
-            <p>Participate in experiments, workshops, and real-world projects that bring science to life.</p>
-          </div>
-          <div class="benefit-card">
-            <div class="benefit-icon">🌍</div>
-            <h3>Networking Opportunities</h3>
-            <p>Connect with peers, faculty, and industry professionals in the scientific community.</p>
-          </div>
-          <div class="benefit-card">
-            <div class="benefit-icon">🚀</div>
-            <h3>Career Growth</h3>
-            <p>Gain insights and inspiration from leading scientists and innovators in various fields.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Call to Action Section -->
-    <section class="events-cta">
-      <div class="container">
-        <div class="cta-content">
-          <div class="cta-visual">
-            <div class="collaboration-icon">🤝</div>
-          </div>
-          <div class="cta-text">
-            <h2>Be part of a thriving community of science enthusiasts</h2>
-            <p>Stay informed about our upcoming events and never miss a chance to learn and grow.</p>
-            <div class="cta-buttons">
-              <button class="btn btn-primary" routerLink="/join">
-                <mat-icon>rocket_launch</mat-icon>
-                Join the Club
-              </button>
-              <button class="btn btn-secondary" (click)="subscribeToUpdates()">
-                <mat-icon>notifications</mat-icon>
-                Subscribe to Event Updates
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+
     </div>
   `,
   styles: [`
@@ -220,12 +212,13 @@ import { Component, OnInit } from '@angular/core';
     }
 
     .hero-title {
+      position: relative;
+      z-index: 2;
       font-size: 3.5rem;
       font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 1.5rem;
-      line-height: 1.2;
-      background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+      line-height: 1;
+      margin: 0;
+      background: linear-gradient(135deg, #ff69b4, #06b6d4);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -234,9 +227,10 @@ import { Component, OnInit } from '@angular/core';
     .hero-subtitle {
       font-size: 1.25rem;
       color: #b0b0b0;
-      margin-bottom: 2.5rem;
+      margin-bottom: 0.5 rem;
       line-height: 1.6;
       max-width: 600px;
+      padding: 15px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -259,8 +253,7 @@ import { Component, OnInit } from '@angular/core';
 
     .hero-cta-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #555;
     }
 
     .btn-icon {
@@ -272,6 +265,46 @@ import { Component, OnInit } from '@angular/core';
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
+    }
+
+    /* Hero Background Icons */
+    .hero-background-icons {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .hero-science-icon {
+      position: absolute;
+      font-size: 6rem;
+      opacity: 0.15;
+      animation: heroFloat 15s infinite linear;
+      transform-origin: center;
+      color: #444;
+    }
+
+    .tool-1 { top: 8%; left: 12%; animation-delay: 0s; }
+    .tool-2 { top: 15%; right: 8%; animation-delay: -2s; }
+    .tool-3 { top: 22%; left: 6%; animation-delay: -4s; }
+    .tool-4 { top: 18%; right: 25%; animation-delay: -6s; }
+    .tool-5 { top: 28%; left: 18%; animation-delay: -8s; }
+    .tool-6 { top: 32%; right: 12%; animation-delay: -10s; }
+    .tool-7 { top: 68%; left: 14%; animation-delay: -12s; }
+    .tool-8 { top: 72%; right: 22%; animation-delay: -14s; }
+    .tool-9 { top: 78%; left: 8%; animation-delay: -16s; }
+    .tool-10 { top: 75%; right: 15%; animation-delay: -18s; }
+    .tool-11 { top: 82%; left: 28%; animation-delay: -1s; }
+    .tool-12 { top: 85%; right: 6%; animation-delay: -3s; }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-20px) rotate(5deg); }
+      50% { transform: translateY(-10px) rotate(-5deg); }
+      75% { transform: translateY(-15px) rotate(3deg); }
     }
 
     /* Section Titles */
@@ -298,7 +331,7 @@ import { Component, OnInit } from '@angular/core';
 
     /* Upcoming Events Section */
     .upcoming-events {
-      padding: 80px 0;
+      padding: 40px 0;
       background: #1a1a1a;
       position: relative;
       z-index: 2;
@@ -322,7 +355,6 @@ import { Component, OnInit } from '@angular/core';
 
     .event-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
       border-color: #555;
     }
 
@@ -424,8 +456,7 @@ import { Component, OnInit } from '@angular/core';
 
     .register-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #555;
     }
 
     .no-events {
@@ -451,7 +482,7 @@ import { Component, OnInit } from '@angular/core';
     /* Past Highlights Section */
     .past-highlights {
       padding: 80px 0;
-      background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+      background: #1a1a1a;
       position: relative;
       z-index: 2;
     }
@@ -474,7 +505,6 @@ import { Component, OnInit } from '@angular/core';
 
     .highlight-item:hover {
       transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
       border-color: #555;
     }
 
@@ -537,7 +567,6 @@ import { Component, OnInit } from '@angular/core';
 
     .benefit-card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
       border-color: #555;
     }
 
@@ -626,9 +655,8 @@ import { Component, OnInit } from '@angular/core';
     }
 
     .btn-primary:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(85, 85, 85, 0.3);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
     }
 
     .btn-secondary {
@@ -638,9 +666,8 @@ import { Component, OnInit } from '@angular/core';
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(85, 85, 85, 0.1);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
     }
 
     /* Animations */

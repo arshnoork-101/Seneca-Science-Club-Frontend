@@ -27,19 +27,68 @@ import { Router } from '@angular/router';
 
       <!-- Header Section -->
       <section class="hero-section">
+        <div class="hero-background-icons">
+          <div class="hero-science-icon tool-1">🧪</div>
+          <div class="hero-science-icon tool-2">🔬</div>
+          <div class="hero-science-icon tool-3">⚗️</div>
+          <div class="hero-science-icon tool-4">🔍</div>
+          <div class="hero-science-icon tool-5">🧬</div>
+          <div class="hero-science-icon tool-6">⚛️</div>
+          <div class="hero-science-icon tool-7">🌡️</div>
+          <div class="hero-science-icon tool-8">📊</div>
+          <div class="hero-science-icon tool-9">🔭</div>
+          <div class="hero-science-icon tool-10">💊</div>
+          <div class="hero-science-icon tool-11">🧫</div>
+          <div class="hero-science-icon tool-12">⚖️</div>
+        </div>
         <div class="hero-content">
-          <div class="hero-visual">
-            <div class="articles-icon">📚</div>
-          </div>
-          <h1 class="hero-title">Articles & Publications</h1>
+          
+          <h1 class="hero-title">Scientific Articles & Research</h1>
           <p class="hero-subtitle">
-            Explore science articles, research notes, and insights contributed by our mentors and members.
+            Discover cutting-edge research and insights from our scientific community.
           </p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ articles.length }}</span>
+              <span class="stat-label">Published Articles</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ getUniqueAuthors() }}</span>
+              <span class="stat-label">Contributing Authors</span>
+            </div>
+            <div class="stat-item">
+             <span class="stat-number">{{ getAllTags().length }}</span>
+              <span class="stat-label">Research Areas</span>
+            </div>
+          </div>
           <div class="hero-actions">
             <button class="write-btn" (click)="showAuthModal()">
               <span class="btn-icon">✍️</span>
-              Write Article
+              Contribute Article
             </button>
+            <button class="browse-btn" (click)="scrollToArticles()">
+              <span class="btn-icon">🔍</span>
+              Browse Research
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter Section -->
+      <section class="filter-section" id="articles-section">
+        <div class="container">
+          <div class="filter-header">
+            <h2 class="filter-title">Research Library</h2>
+            <div class="filter-controls">
+              <div class="search-box">
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Search articles..." class="search-input">
+                <span class="search-icon">🔍</span>
+              </div>
+              <select [(ngModel)]="selectedTag" class="tag-filter">
+                <option value="">All Topics</option>
+                <option *ngFor="let tag of getAllTags()" [value]="tag">{{ tag }}</option>
+              </select>
+            </div>
           </div>
         </div>
       </section>
@@ -47,8 +96,8 @@ import { Router } from '@angular/router';
       <!-- Articles Grid -->
       <section class="articles-section">
         <div class="container">
-          <div class="articles-grid" *ngIf="articles.length > 0">
-            <div class="article-card" *ngFor="let article of articles">
+          <div class="articles-grid" *ngIf="getFilteredArticles().length > 0">
+            <div class="article-card" *ngFor="let article of getFilteredArticles(); trackBy: trackByArticleId">
               <div class="article-image" *ngIf="article.image">
                 <img [src]="article.image" [alt]="article.title" />
                 <div class="image-overlay"></div>
@@ -70,6 +119,12 @@ import { Router } from '@angular/router';
                 </button>
               </div>
             </div>
+          </div>
+          <div *ngIf="getFilteredArticles().length === 0 && articles.length > 0" class="no-results">
+            <div class="empty-icon">🔍</div>
+            <h3>No Articles Found</h3>
+            <p>Try adjusting your search terms or filters.</p>
+            <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
           </div>
           <div *ngIf="articles.length === 0" class="no-articles">
             <div class="empty-icon">📄</div>
@@ -97,6 +152,36 @@ import { Router } from '@angular/router';
             <button class="verify-btn" (click)="verifyCode()">Verify</button>
           </div>
           <div class="error-message" *ngIf="authError">{{ authError }}</div>
+        </div>
+      </div>
+
+      <!-- Article Detail Modal -->
+      <div class="article-detail-modal" *ngIf="showArticleDetail" (click)="hideArticleDetail()">
+        <div class="article-detail-content" (click)="$event.stopPropagation()">
+          <div class="article-detail-header">
+            <button class="close-btn" (click)="hideArticleDetail()">×</button>
+          </div>
+          <div class="article-detail-body" *ngIf="selectedArticle">
+            <div class="article-detail-image" *ngIf="selectedArticle.image">
+              <img [src]="selectedArticle.image" [alt]="selectedArticle.title" />
+            </div>
+            <div class="article-detail-info">
+              <h1 class="article-detail-title">{{ selectedArticle.title }}</h1>
+              <div class="article-detail-meta">
+                <span class="article-detail-author">By {{ selectedArticle.author }}</span>
+                <span class="article-detail-date">{{ selectedArticle.date | date:'MMM dd, yyyy' }}</span>
+              </div>
+              <div class="article-detail-tags">
+                <span class="article-detail-tag" *ngFor="let tag of selectedArticle.tags">#{{ tag }}</span>
+              </div>
+              <div class="article-detail-excerpt">
+                <p>{{ selectedArticle.excerpt }}</p>
+              </div>
+              <div class="article-detail-content-text">
+                <div [innerHTML]="getFormattedContent(selectedArticle.body)"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -225,22 +310,31 @@ import { Router } from '@angular/router';
       animation: fadeInUp 1s ease-out;
     }
 
-    .hero-visual {
+    .hero-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(255, 105, 180, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(255, 105, 180, 0.3);
+      border-radius: 50px;
+      padding: 8px 20px;
       margin-bottom: 2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
-    .articles-icon {
-      font-size: 6rem;
-      opacity: 0.9;
-      animation: pulse 2s infinite;
+    .badge-text {
+      color: #ffffff;
     }
 
     .hero-title {
       font-size: 3.5rem;
       font-weight: 700;
-      color: #ffffff;
       margin-bottom: 1.5rem;
       line-height: 1.2;
+      margin-top: -30px;
+      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .hero-subtitle {
@@ -251,14 +345,46 @@ import { Router } from '@angular/router';
       margin: 0 auto 2.5rem;
     }
 
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 2.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
     .hero-actions {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
       margin-top: 2rem;
     }
 
-    .write-btn {
-      background: linear-gradient(135deg, #333 0%, #555 100%);
-      color: white;
-      border: none;
+    .write-btn, .browse-btn {
       padding: 15px 30px;
       font-size: 1.1rem;
       font-weight: 600;
@@ -268,13 +394,19 @@ import { Router } from '@angular/router';
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      border: none;
     }
 
-    .write-btn:hover {
+    .write-btn, .browse-btn {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .write-btn:hover, .browse-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .btn-icon {
@@ -288,9 +420,133 @@ import { Router } from '@angular/router';
       padding: 0 20px;
     }
 
+    /* Filter Section */
+    .filter-section {
+      padding: 40px 0;
+      background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+      position: relative;
+      z-index: 2;
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .filter-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 12px 45px 12px 15px;
+      border: 1px solid #555;
+      border-radius: 25px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 1rem;
+      width: 250px;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #ff69b4;
+      box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      color: #888;
+      pointer-events: none;
+    }
+
+    .tag-filter {
+      padding: 12px 15px;
+      border: 1px solid #555;
+      border-radius: 25px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tag-filter:focus {
+      outline: none;
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding: 8rem 0 4rem;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-background-icons {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .hero-science-icon {
+      position: absolute;
+      font-size: 6rem;
+      opacity: 0.15;
+      animation: heroFloat 15s infinite linear;
+      transform-origin: center;
+      color: #444;
+    }
+
+    .tool-1 { top: 8%; left: 12%; animation-delay: 0s; }
+    .tool-2 { top: 15%; right: 8%; animation-delay: -2s; }
+    .tool-3 { top: 22%; left: 6%; animation-delay: -4s; }
+    .tool-4 { top: 18%; right: 25%; animation-delay: -6s; }
+    .tool-5 { top: 28%; left: 18%; animation-delay: -8s; }
+    .tool-6 { top: 32%; right: 12%; animation-delay: -10s; }
+    .tool-7 { top: 68%; left: 14%; animation-delay: -12s; }
+    .tool-8 { top: 72%; right: 22%; animation-delay: -14s; }
+    .tool-9 { top: 78%; left: 8%; animation-delay: -16s; }
+    .tool-10 { top: 75%; right: 15%; animation-delay: -18s; }
+    .tool-11 { top: 82%; left: 28%; animation-delay: -1s; }
+    .tool-12 { top: 85%; right: 6%; animation-delay: -3s; }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-20px) rotate(5deg); }
+      50% { transform: translateY(-10px) rotate(-5deg); }
+      75% { transform: translateY(-15px) rotate(3deg); }
+    }
+
     /* Articles Section */
     .articles-section {
-      padding: 80px 0;
+      padding: 60px 0 80px;
       background: #1a1a1a;
       position: relative;
       z-index: 2;
@@ -316,7 +572,6 @@ import { Router } from '@angular/router';
 
     .article-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
       border-color: #555;
     }
 
@@ -414,11 +669,10 @@ import { Router } from '@angular/router';
 
     .read-more-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #555;
     }
 
-    .no-articles {
+    .no-articles, .no-results {
       text-align: center;
       padding: 60px 20px;
       color: #888;
@@ -430,10 +684,27 @@ import { Router } from '@angular/router';
       opacity: 0.7;
     }
 
-    .no-articles h3 {
+    .no-articles h3, .no-results h3 {
       font-size: 1.5rem;
       margin-bottom: 10px;
       color: #aaa;
+    }
+
+    .clear-filters-btn {
+      background: linear-gradient(135deg, #06b6d4, #ff69b4);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .clear-filters-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
     }
 
     .write-first-btn {
@@ -450,7 +721,7 @@ import { Router } from '@angular/router';
 
     .write-first-btn:hover {
       transform: translateY(-2px);
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #555;
     }
 
     /* Auth Modal */
@@ -527,7 +798,7 @@ import { Router } from '@angular/router';
     }
 
     .verify-btn:hover {
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #555;
     }
 
     .error-message {
@@ -632,7 +903,7 @@ import { Router } from '@angular/router';
     }
 
     .publish-btn:hover {
-      background: linear-gradient(135deg, #444 0%, #666 100%);
+      background: #555;
     }
 
     /* Animations */
@@ -656,6 +927,176 @@ import { Router } from '@angular/router';
       }
     }
 
+    /* Article Detail Modal */
+    .article-detail-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .article-detail-content {
+      background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+      border-radius: 20px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      animation: slideInUp 0.4s ease-out;
+    }
+
+    .article-detail-header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 20px 25px 0;
+    }
+
+    .article-detail-header .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #ccc;
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .article-detail-header .close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .article-detail-body {
+      padding: 0 30px 30px;
+    }
+
+    .article-detail-image {
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+      border-radius: 15px;
+      margin-bottom: 25px;
+    }
+
+    .article-detail-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .article-detail-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 15px;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .article-detail-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #333;
+    }
+
+    .article-detail-author {
+      font-weight: 600;
+      color: #06b6d4;
+      font-size: 1.1rem;
+    }
+
+    .article-detail-date {
+      color: #888;
+      font-size: 0.95rem;
+    }
+
+    .article-detail-tags {
+      margin-bottom: 25px;
+    }
+
+    .article-detail-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, #333, #444);
+      color: #06b6d4;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-right: 10px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      border: 1px solid #444;
+    }
+
+    .article-detail-excerpt {
+      background: rgba(6, 182, 212, 0.1);
+      border-left: 4px solid #06b6d4;
+      padding: 20px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 30px;
+    }
+
+    .article-detail-excerpt p {
+      color: #e0e0e0;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin: 0;
+      font-style: italic;
+    }
+
+    .article-detail-content-text {
+      color: #cccccc;
+      line-height: 1.8;
+      font-size: 1.05rem;
+    }
+
+    .article-detail-content-text p {
+      margin-bottom: 20px;
+    }
+
+    .article-detail-content-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .hero-title {
@@ -664,6 +1105,37 @@ import { Router } from '@angular/router';
 
       .hero-subtitle {
         font-size: 1.1rem;
+      }
+
+      .hero-stats {
+        gap: 25px;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .write-btn, .browse-btn {
+        width: 200px;
+        justify-content: center;
+      }
+
+      .filter-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-controls {
+        justify-content: center;
+      }
+
+      .search-input {
+        width: 200px;
       }
 
       .articles-grid {
@@ -682,6 +1154,29 @@ import { Router } from '@angular/router';
 
       .editor-form {
         padding: 20px;
+      }
+
+      .article-detail-content {
+        margin: 10px;
+        max-height: 95vh;
+      }
+
+      .article-detail-body {
+        padding: 0 20px 20px;
+      }
+
+      .article-detail-title {
+        font-size: 2rem;
+      }
+
+      .article-detail-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .article-detail-image {
+        height: 200px;
       }
     }
 
@@ -704,9 +1199,13 @@ export class BlogComponent implements OnInit {
   articles: any[] = [];
   showAuth = false;
   showEditor = false;
+  showArticleDetail = false;
+  selectedArticle: any = null;
   accessCode = '';
   authError = '';
   editingArticle: any = null;
+  searchTerm = '';
+  selectedTag = '';
   articleForm = {
     title: '',
     author: '',
@@ -875,7 +1374,8 @@ As CRISPR technology continues to evolve, with new variants offering even greate
   }
 
   readArticle(articleId: number) {
-    this.router.navigate(['/article', articleId]);
+    this.selectedArticle = this.articles.find(article => article.id === articleId);
+    this.showArticleDetail = true;
   }
 
   editArticle(article: any) {
@@ -886,5 +1386,54 @@ As CRISPR technology continues to evolve, with new variants offering even greate
         this.openEditor(article);
       }
     }, 100);
+  }
+
+  getFilteredArticles() {
+    return this.articles.filter(article => {
+      const matchesSearch = !this.searchTerm || 
+        article.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        article.author.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        article.excerpt.toLowerCase().includes(this.searchTerm.toLowerCase());
+      
+      const matchesTag = !this.selectedTag || 
+        article.tags.some((tag: string) => tag.toLowerCase() === this.selectedTag.toLowerCase());
+      
+      return matchesSearch && matchesTag;
+    });
+  }
+
+  getAllTags(): string[] {
+    const allTags = this.articles.flatMap(article => article.tags);
+    return [...new Set(allTags)].sort();
+  }
+
+  getUniqueAuthors(): number {
+    const authors = [...new Set(this.articles.map(article => article.author))];
+    return authors.length;
+  }
+
+  trackByArticleId(index: number, article: any): number {
+    return article.id;
+  }
+
+  scrollToArticles() {
+    const element = document.getElementById('articles-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.selectedTag = '';
+  }
+
+  hideArticleDetail() {
+    this.showArticleDetail = false;
+    this.selectedArticle = null;
+  }
+
+  getFormattedContent(content: string): string {
+    return content.replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>');
   }
 }

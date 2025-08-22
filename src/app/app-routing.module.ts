@@ -7,7 +7,6 @@ import { AdminGuard } from './guards/admin.guard';
 
 // Components
 import { HomeComponent } from './pages/home/home.component';
-import { AboutComponent } from './pages/about/about.component';
 import { JoinComponent } from './pages/join/join.component';
 import { EventsComponent } from './pages/events/events.component';
 import { EventDetailComponent } from './pages/events/event-detail/event-detail.component';
@@ -24,14 +23,14 @@ import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-das
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'about', component: AboutComponent },
   { path: 'join', component: JoinComponent },
   { path: 'events', component: EventsComponent },
   { path: 'events/:id', component: EventDetailComponent },
   { path: 'events/:id/register', component: EventRegistrationComponent },
   { path: 'team', component: TeamComponent },
+  { path: 'blog', component: BlogComponent },
   { path: 'articles', component: BlogComponent },
-  { path: 'article/:id', component: BlogDetailComponent },
+  { path: 'blog/:id', component: BlogDetailComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },

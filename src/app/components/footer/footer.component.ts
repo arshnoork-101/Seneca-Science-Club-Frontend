@@ -25,11 +25,10 @@ import { Component } from '@angular/core';
           <h4>Quick Links</h4>
           <ul class="footer-links">
             <li><a routerLink="/">Home</a></li>
-            <li><a routerLink="/about">About</a></li>
             <li><a routerLink="/events">Events</a></li>
             <li><a routerLink="/team">Team</a></li>
-            <li><a routerLink="/gallery">Gallery</a></li>
-            <li><a routerLink="/blog">Blog</a></li>
+            <li><a routerLink="/articles">Articles</a></li>
+            <li><a routerLink="/contact">Contact</a></li>
           </ul>
         </div>
 
@@ -39,9 +38,8 @@ import { Component } from '@angular/core';
             <li><a routerLink="/join">Join Now</a></li>
             <li><a routerLink="/events">Attend Events</a></li>
             <li><a routerLink="/contact">Contact Us</a></li>
-            <li><a routerLink="/blog">Write for Blog</a></li>
-            <li><a routerLink="/gallery">Share Photos</a></li>
-            <li><a routerLink="/about">Volunteer</a></li>
+            <li><a routerLink="/articles">Write for Articles</a></li>
+            <li><a routerLink="/team">Meet the Team</a></li>
           </ul>
         </div>
 
@@ -60,9 +58,9 @@ import { Component } from '@angular/core';
         <div class="footer-bottom-content">
           <p>&copy; 2024 Seneca Science Club. All rights reserved.</p>
           <div class="footer-bottom-links">
-            <a routerLink="/privacy">Privacy Policy</a>
-            <a routerLink="/terms">Terms of Service</a>
-            <a routerLink="/accessibility">Accessibility</a>
+            <a routerLink="/contact">Contact Us</a>
+            <a routerLink="/team">Our Team</a>
+            <a routerLink="/join">Join Club</a>
           </div>
         </div>
       </div>

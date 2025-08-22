@@ -32,46 +32,59 @@ import { BlogService } from '../../services/blog.service';
           <span class="club-name">Seneca Science Club</span>
         </h1>
         <p class="hero-subtitle">
-          Igniting curiosity, fostering innovation, and building a community of science enthusiasts
-        </p>
-        <div class="hero-buttons">
+A student-led community uniting science explorers across Seneca.      
+</p>
+<div class="hero-buttons">
           <button class="btn btn-secondary" routerLink="/events">
             <span class="btn-icon">🔬</span>
             Explore Events
           </button>
-          <button class="btn btn-secondary" routerLink="/blog">
+          <button class="btn btn-secondary" routerLink="/articles">
             <span class="btn-icon">📚</span>
-            Read Blog
+            Read Articles
           </button>
         </div>
       </div>
     </section>
 
-
-    
     <!-- About Us Section -->
     <section class="about-section">
       <div class="container">
-        <!-- Heading & Intro -->
+        <!-- Heading & Intro with Mission & Vision -->
         <div class="about-header">
           <h2 class="section-title">About Us</h2>
-          <p class="about-intro">
-            Seneca Science Club is a student-led community of curious minds passionate about exploring, learning, and sharing science. 
-            We bring together students from all programs who are eager to engage with science beyond the classroom and build meaningful connections.
-          </p>
-        </div>
-
-        <!-- Mission & Vision -->
-        <div class="mission-vision-grid">
-          <div class="mission-card">
-            <div class="card-icon">🎯</div>
-            <h3>Our Mission</h3>
-            <p>To foster curiosity, innovation, and collaboration by creating opportunities for students to explore science through hands-on projects, events, and discussions.</p>
+          
+          <div class="about-image-container">
+            <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                 alt="Students collaborating in science lab" 
+                 class="about-main-image" />
           </div>
-          <div class="vision-card">
-            <div class="card-icon">🌟</div>
-            <h3>Our Vision</h3>
-            <p>To build a vibrant, inclusive community that inspires the next generation of scientists, innovators, and leaders at Seneca.</p>
+          
+          <div class="about-intro">
+            <p class="intro-line-1">Seneca Science Club is a student-led community of curious minds.</p>
+            <p class="intro-line-2">We explore, learn, and share science — leaving the classroom behind.</p>
+          </div>
+          
+          <div class="mission-vision-cards">
+            <div class="mission-card">
+              <div class="card-header">
+                <span class="card-icon">🎯</span>
+                <h3 class="card-title">Mission</h3>
+              </div>
+              <p class="card-content">
+                To foster <strong>curiosity</strong>, <strong>collaboration</strong>, and <strong>innovation</strong> through hands-on projects, events, and discussions.
+              </p>
+            </div>
+            
+            <div class="vision-card">
+              <div class="card-header">
+                <span class="card-icon">🌟</span>
+                <h3 class="card-title">Vision</h3>
+              </div>
+              <p class="card-content">
+                To build an <strong>inclusive</strong>, vibrant community that inspires the next generation of scientists and innovators at Seneca.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -136,7 +149,7 @@ import { BlogService } from '../../services/blog.service';
         <!-- Join Us & Stay Connected -->
         <div class="join-stay-connected">
           <div class="join-header">
-            <h3 class="join-title">👉 Join Us & Stay Connected</h3>
+            <h3 class="join-title">👉 Stay Connected</h3>
             <p class="join-intro">
               Whether you're pursuing science as a career or simply curious about the world around you, 
               the Seneca Science Club is the place to explore, innovate, and connect. Be part of the journey 
@@ -155,19 +168,6 @@ import { BlogService } from '../../services/blog.service';
             </button>
           </div>
 
-          <div class="social-connect">
-            <p class="social-text">Connect with fellow science enthusiasts and build your professional network:</p>
-            <div class="social-buttons">
-              <a href="https://linkedin.com/company/senecascienceclub" target="_blank" class="social-btn linkedin">
-                <mat-icon>business</mat-icon>
-                <span>LinkedIn</span>
-              </a>
-              <a href="https://instagram.com/senecascienceclub" target="_blank" class="social-btn instagram">
-                <mat-icon>camera_alt</mat-icon>
-                <span>Instagram</span>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -281,10 +281,6 @@ import { BlogService } from '../../services/blog.service';
       transition: all 0.3s ease;
     }
 
-    .club-name:hover {
-      transform: scale(1.05);
-      text-shadow: 0 0 20px rgba(255, 20, 147, 0.3);
-    }
 
     .hero-subtitle {
       font-size: 1.4rem;
@@ -321,9 +317,6 @@ import { BlogService } from '../../services/blog.service';
       color: #ffffff;
     }
 
-    .btn:hover {
-      text-decoration: underline;
-    }
 
     .btn-icon {
       font-size: 1.2rem;
@@ -346,9 +339,6 @@ import { BlogService } from '../../services/blog.service';
       margin: 0 10px;
     }
 
-    .secondary-btn:hover {
-      text-decoration: underline;
-    }
 
 
     .join-btn-simple {
@@ -357,15 +347,10 @@ import { BlogService } from '../../services/blog.service';
       transition: background-color 0.2s ease;
     }
 
-    .join-btn-simple:hover {
-      background: #A0522D;
-      transform: none;
-      box-shadow: none;
-    }
 
 
     .about-section {
-      padding: 20px 0;
+      padding: 0;
       background-color: #1a1a1a;
     }
 
@@ -391,74 +376,123 @@ import { BlogService } from '../../services/blog.service';
 
     .about-header {
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: 80px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 40px;
+      color: #ffffff;
+      background: linear-gradient(45deg, #FF69B4, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .about-image-container {
+      margin: 30px auto 40px auto;
+      max-width: 600px;
+    }
+
+    .about-main-image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
     }
 
     .about-intro {
-      font-size: 1.2rem;
-      line-height: 1.8;
-      color: #e0e0e0;
-      max-width: 800px;
-      margin: 0 auto;
+      margin: 50px 0 60px 0;
+      text-align: center;
     }
 
-    .mission-vision-grid {
+    .intro-line-1 {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .intro-line-2 {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #e0e0e0;
+      font-style: italic;
+      margin-bottom: 0;
+    }
+
+    .mission-vision-cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 40px;
-      margin-bottom: 60px;
+      margin-top: 60px;
     }
 
     .mission-card, .vision-card {
       background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
       border-radius: 20px;
-      padding: 40px 30px;
-      text-align: center;
-      border: 1px solid #444;
-      transition: all 0.3s ease;
+      padding: 30px;
+      border: 2px solid #444;
       position: relative;
       overflow: hidden;
     }
 
-    .mission-card::before, .vision-card::before {
+    .mission-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #FF69B4, #06b6d4);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(255, 105, 180, 0.8), rgba(255, 105, 180, 0.4));
     }
 
-    .mission-card:hover::before, .vision-card:hover::before {
-      opacity: 1;
+    .vision-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.8), rgba(6, 182, 212, 0.4));
     }
 
-    .mission-card:hover, .vision-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.2);
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
     .card-icon {
-      font-size: 4rem;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 4px 8px rgba(255, 105, 180, 0.3));
+      font-size: 2.5rem;
+      filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.1));
     }
 
-    .mission-card h3, .vision-card h3 {
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: #FF69B4;
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: rgb(190, 59, 127);
+      margin: 0;
     }
 
-    .mission-card p, .vision-card p {
-      color: #cccccc;
-      line-height: 1.7;
+    .card-content {
       font-size: 1.1rem;
+      line-height: 1.7;
+      color: #e0e0e0;
+      margin: 0;
     }
+
+    .card-content strong {
+      color: rgb(190, 59, 127);
+      font-weight: 700;
+    }
+
 
     .what-we-do {
       margin-bottom: 60px;
@@ -470,6 +504,10 @@ import { BlogService } from '../../services/blog.service';
       text-align: center;
       margin-bottom: 40px;
       color: #ffffff;
+      background: linear-gradient(45deg, #FF69B4, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .activities-grid {
@@ -489,11 +527,6 @@ import { BlogService } from '../../services/blog.service';
       transition: all 0.3s ease;
     }
 
-    .activity-item:hover {
-      transform: translateX(10px);
-      border-color: #FF69B4;
-      box-shadow: 0 8px 25px rgba(255, 105, 180, 0.15);
-    }
 
     .activity-icon {
       font-size: 2.5rem;
@@ -539,14 +572,6 @@ import { BlogService } from '../../services/blog.service';
       transition: opacity 0.3s ease;
     }
 
-    .benefit-card:hover::before {
-      opacity: 1;
-    }
-
-    .benefit-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 40px rgba(6, 182, 212, 0.2);
-    }
 
     .benefit-icon {
       font-size: 3rem;
@@ -569,12 +594,8 @@ import { BlogService } from '../../services/blog.service';
 
     .join-stay-connected {
       text-align: center;
-      background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
-      border-radius: 25px;
-      padding: 50px 40px;
-      border: 2px solid #444;
+      padding: 60px 40px;
       position: relative;
-      overflow: hidden;
     }
 
     .join-stay-connected::before {
@@ -621,18 +642,18 @@ import { BlogService } from '../../services/blog.service';
     }
 
     .btn-primary-highlight {
-      background: linear-gradient(135deg, #FF69B4, #ff1493);
-      border: 2px solid #FF69B4;
-      color: white;
+      background: transparent;
+      border: 2px solid rgb(190, 59, 127);
+      color: rgb(190, 59, 127);
       font-weight: 600;
-      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+      transition: all 0.3s ease;
     }
 
     .btn-primary-highlight:hover {
-      background: linear-gradient(135deg, #ff1493, #FF69B4);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(255, 105, 180, 0.5);
+      background: rgba(190, 59, 127, 0.1);
+      transform: translateY(-2px);
     }
+
 
     .btn-secondary-outline {
       background: transparent;
@@ -641,17 +662,17 @@ import { BlogService } from '../../services/blog.service';
       font-weight: 500;
     }
 
-    .btn-secondary-outline:hover {
-      background: rgba(6, 182, 212, 0.1);
-      border-color: #67e8f9;
-      color: #67e8f9;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
-    }
 
     .social-connect {
       border-top: 1px solid #444;
       padding-top: 30px;
+    }
+
+    .connect-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 15px;
     }
 
     .social-text {
@@ -681,17 +702,6 @@ import { BlogService } from '../../services/blog.service';
       font-weight: 500;
     }
 
-    .social-btn.linkedin:hover {
-      border-color: #0077b5;
-      box-shadow: 0 6px 20px rgba(0, 119, 181, 0.3);
-      transform: translateY(-2px);
-    }
-
-    .social-btn.instagram:hover {
-      border-color: #e4405f;
-      box-shadow: 0 6px 20px rgba(228, 64, 95, 0.3);
-      transform: translateY(-2px);
-    }
 
     /* Responsive Design */
     @media (max-width: 1200px) {
@@ -702,9 +712,21 @@ import { BlogService } from '../../services/blog.service';
     }
 
     @media (max-width: 768px) {
-      .mission-vision-grid {
+      .about-header {
+        text-align: center;
+      }
+
+      .section-title {
+        text-align: center;
+      }
+
+      .mission-vision-cards {
         grid-template-columns: 1fr;
         gap: 30px;
+      }
+
+      .about-intro {
+        text-align: center;
       }
 
       .activities-grid {
@@ -721,10 +743,6 @@ import { BlogService } from '../../services/blog.service';
         flex-direction: column;
         text-align: center;
         gap: 15px;
-      }
-
-      .activity-item:hover {
-        transform: translateY(-5px);
       }
 
       .join-actions {
@@ -868,17 +886,6 @@ import { BlogService } from '../../services/blog.service';
       font-weight: 500;
     }
 
-    .social-link-button.linkedin:hover {
-      border-color: #0077b5;
-      box-shadow: 0 8px 25px rgba(0, 119, 181, 0.3);
-      transform: translateY(-2px);
-    }
-
-    .social-link-button.instagram:hover {
-      border-color:rgb(224, 108, 129);
-      box-shadow: 0 8px 25px rgba(100, 145, 208, 0.3);
-      transform: translateY(-2px);
-    }
 
     .stay-connected-visual {
       display: flex;
