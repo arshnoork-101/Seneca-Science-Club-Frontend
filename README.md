@@ -24,7 +24,7 @@ A modern Angular web application for the Seneca Science Club, featuring event ma
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd SSC-Official/client
+   cd ./
    ```
 
 2. **Install dependencies**
@@ -146,11 +146,6 @@ ng build --prod
 ng test
 ```
 
-### E2E Tests
-```bash
-ng e2e
-```
-
 ## 📊 Performance
 
 - **Lazy Loading** - Route-based code splitting
@@ -172,16 +167,5 @@ ng e2e
 4. Push to branch: `git push origin feature/new-feature`
 5. Submit pull request
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 📞 Support
-
-For support, contact the Seneca Science Club team:
-- Email: senecascienceclub@gmail.com
-- Website: [Seneca Science Club](https://seneca-science-club.netlify.app)
-
----
 
 **Built with ❤️ by the Seneca Science Club Team**
