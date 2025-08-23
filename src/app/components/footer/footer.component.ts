@@ -88,7 +88,7 @@ import { Component } from '@angular/core';
     .footer-section h3 {
       font-size: 1.5rem;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin: 20px;
       color: #ecf0f1;
     }
 
