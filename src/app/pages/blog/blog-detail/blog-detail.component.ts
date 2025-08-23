@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BlogService } from '../../../services/blog.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-blog-detail',
@@ -453,7 +455,9 @@ export class BlogDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private blogService: BlogService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -463,13 +467,25 @@ export class BlogDetailComponent implements OnInit {
   loadArticle() {
     const articleId = this.route.snapshot.paramMap.get('id');
     if (articleId) {
-      const storedArticles = localStorage.getItem('ssc_articles');
-      if (storedArticles) {
-        const articles = JSON.parse(storedArticles);
-        this.article = articles.find((a: any) => a.id.toString() === articleId);
-      }
+      this.blogService.getPost(articleId).subscribe({
+        next: (article) => {
+          this.article = article;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error loading article:', error);
+          // Fallback to localStorage
+          const storedArticles = localStorage.getItem('ssc_articles');
+          if (storedArticles) {
+            const articles = JSON.parse(storedArticles);
+            this.article = articles.find((a: any) => a.id.toString() === articleId);
+          }
+          this.loading = false;
+        }
+      });
+    } else {
+      this.loading = false;
     }
-    this.loading = false;
   }
 
   formatArticleBody(body: string): string {
@@ -493,15 +509,31 @@ export class BlogDetailComponent implements OnInit {
   }
 
   verifyCode() {
-    if (this.accessCode === this.VALID_ACCESS_CODE) {
-      this.hideAuthModal();
-      // Navigate back to articles page with edit mode
-      this.router.navigate(['/articles'], { 
-        queryParams: { edit: this.article.id } 
-      });
-    } else {
-      this.authError = 'Invalid access code. Please try again.';
-    }
+    this.authService.verifyAccessCode(this.accessCode).subscribe({
+      next: (isValid: boolean) => {
+        if (isValid) {
+          this.hideAuthModal();
+          // Navigate back to articles page with edit mode
+          this.router.navigate(['/articles'], { 
+            queryParams: { edit: this.article.id } 
+          });
+        } else {
+          this.authError = 'Invalid access code. Please try again.';
+        }
+      },
+      error: (error: any) => {
+        console.error('Error verifying access code:', error);
+        // Fallback to hardcoded verification for development
+        if (this.accessCode === this.VALID_ACCESS_CODE) {
+          this.hideAuthModal();
+          this.router.navigate(['/articles'], { 
+            queryParams: { edit: this.article.id } 
+          });
+        } else {
+          this.authError = 'Invalid access code. Please try again.';
+        }
+      }
+    });
   }
 
   shareArticle() {

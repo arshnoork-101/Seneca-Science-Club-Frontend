@@ -94,7 +94,7 @@ import { Component, OnInit } from '@angular/core';
               <div class="event-meta">
                 <p class="event-datetime">
                   <mat-icon>schedule</mat-icon>
-                  {{ event.date | date:'MMM dd, yyyy' }} • {{ event.time }}
+                  TBD • TBD
                 </p>
                 <p class="event-location">
                   <mat-icon>location_on</mat-icon>
@@ -117,25 +117,127 @@ import { Component, OnInit } from '@angular/core';
       </div>
     </section>
 
-    <!-- Past Highlights Section -->
+    <!-- Past Events Section -->
     <section class="past-highlights">
       <div class="container">
-        <h2 class="section-title">Past Highlights</h2>
-        <div class="highlights-carousel">
-          <div class="highlight-item" *ngFor="let highlight of pastHighlights">
-            <div class="highlight-image">
-              <img [src]="highlight.image" [alt]="highlight.title" />
+        <h2 class="section-title">Past Events</h2>
+        <div class="events-grid">
+          <div class="event-card" *ngFor="let event of pastEvents">
+            <div class="event-image">
+              <img [src]="event.image" [alt]="event.title" />
+              <div class="event-date-badge">
+                <span class="month">{{ event.dateObj | date:'MMM' }}</span>
+                <span class="day">{{ event.dateObj | date:'dd' }}</span>
+              </div>
             </div>
-            <div class="highlight-content">
-              <h3>{{ highlight.title }}</h3>
-              <p>{{ highlight.description }}</p>
+            <div class="event-content">
+              <h3>{{ event.title }}</h3>
+              <div class="event-meta">
+                <p class="event-datetime">
+                  <mat-icon>schedule</mat-icon>
+                  {{ event.date }}
+                </p>
+                <p class="event-location">
+                  <mat-icon>location_on</mat-icon>
+                  {{ event.location }}
+                </p>
+              </div>
+              <p class="event-description">{{ event.description }}</p>
+              <button class="know-more-btn" (click)="openEventModal(event)">
+                <mat-icon>info</mat-icon>
+                Know More
+              </button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Event Modal -->
+    <div class="modal-overlay" *ngIf="selectedEvent" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+        
+        <div class="modal-header">
+          <img [src]="selectedEvent.image" [alt]="selectedEvent.title" class="modal-image">
+          <h2>{{ selectedEvent.title }}</h2>
+          <p class="event-date">{{ selectedEvent.date }}</p>
+        </div>
 
+        <div class="modal-body">
+          <div class="section">
+            <h3>📌 Core Details</h3>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <strong>Event Title & Date:</strong> {{ selectedEvent.title }} - {{ selectedEvent.date }}
+              </div>
+              <div class="detail-item">
+                <strong>Location:</strong> {{ selectedEvent.location }}
+              </div>
+              <div class="detail-item">
+                <strong>Attendance:</strong> {{ selectedEvent.attendance }}
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>📝 Content Recap</h3>
+            <div class="content-recap">
+              <div class="recap-item">
+                <strong>Highlights:</strong>
+                <ul>
+                  <li *ngFor="let highlight of selectedEvent.highlights">{{ highlight }}</li>
+                </ul>
+              </div>
+              <div class="recap-item">
+                <strong>Key Takeaways:</strong>
+                <ul>
+                  <li *ngFor="let takeaway of selectedEvent.takeaways">{{ takeaway }}</li>
+                </ul>
+              </div>
+              <div class="recap-item" *ngIf="selectedEvent.memorableMoments">
+                <strong>Memorable Moments:</strong>
+                <p>{{ selectedEvent.memorableMoments }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" *ngIf="selectedEvent.media">
+            <h3>📸 Media</h3>
+            <div class="media-gallery">
+              <img *ngFor="let photo of selectedEvent.media" [src]="photo" class="gallery-image" (click)="openImageLightbox(photo)">
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>📊 Impact</h3>
+            <div class="impact-section">
+              <div class="feedback" *ngIf="selectedEvent.feedback">
+                <strong>Feedback Summary:</strong>
+                <p>{{ selectedEvent.feedback }}</p>
+              </div>
+              <div class="stats" *ngIf="selectedEvent.stats">
+                <strong>Engagement Stats:</strong>
+                <p>{{ selectedEvent.stats }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>👥 Acknowledgments</h3>
+            <p>{{ selectedEvent.acknowledgments }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Lightbox -->
+    <div class="lightbox-overlay" *ngIf="selectedImage" (click)="closeLightbox()">
+      <div class="lightbox-content">
+        <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
+        <img [src]="selectedImage" class="lightbox-image" (click)="$event.stopPropagation()">
+      </div>
+    </div>
 
     </div>
   `,
@@ -479,7 +581,7 @@ import { Component, OnInit } from '@angular/core';
       color: #aaa;
     }
 
-    /* Past Highlights Section */
+    /* Past Events Section */
     .past-highlights {
       padding: 80px 0;
       background: #1a1a1a;
@@ -487,57 +589,208 @@ import { Component, OnInit } from '@angular/core';
       z-index: 2;
     }
 
-    .highlights-carousel {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-top: 2rem;
-    }
-
-    .highlight-item {
-      background: linear-gradient(145deg, #333 0%, #2a2a2a 100%);
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-      border: 1px solid #444;
-    }
-
-    .highlight-item:hover {
-      transform: translateY(-5px);
-      border-color: #555;
-    }
-
-    .highlight-image {
-      height: 200px;
-      overflow: hidden;
-    }
-
-    .highlight-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .highlight-item:hover .highlight-image img {
-      transform: scale(1.05);
-    }
-
-    .highlight-content {
-      padding: 25px;
-    }
-
-    .highlight-content h3 {
-      font-size: 1.3rem;
+    .know-more-btn {
+      background: linear-gradient(135deg, #333 0%, #555 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
       font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+      font-size: 0.9rem;
     }
 
-    .highlight-content p {
-      color: #cccccc;
+    .know-more-btn:hover {
+      transform: translateY(-2px);
+      background: #555;
+    }
+
+    .know-more-btn mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, #2a2a2a 0%, #1f1f1f 100%);
+      border-radius: 20px;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      border: 1px solid #444;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #888;
+      cursor: pointer;
+      z-index: 1001;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #FF69B4;
+    }
+
+    .modal-header {
+      text-align: center;
+      padding: 20px 20px 15px;
+      border-bottom: 1px solid #333;
+    }
+
+    .modal-image {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
+
+    .modal-header h2 {
+      color: #ffffff;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .event-date {
+      color: #FF69B4;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .modal-body {
+      padding: 10px;
+    }
+
+    .section {
+      margin-bottom: 10px;
+    }
+
+    .section h3 {
+      color: #FF69B4;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .detail-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px;
+      border-radius: 10px;
+      border-left: 3px solid #FF69B4;
+    }
+
+    .detail-item strong {
+      color: #ffffff;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .content-recap {
+      display: grid;
+      gap: 10px;
+    }
+
+    .recap-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .recap-item strong {
+      color: #ffffff;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .recap-item ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #e0e0e0;
+    }
+
+    .recap-item li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .media-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery-image:hover {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+
+    .impact-section {
+      display: grid;
+      gap: 10px;
+    }
+
+    .feedback, .stats {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .feedback strong, .stats strong {
+      color: #ffffff;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .feedback p, .stats p {
+      color: #e0e0e0;
       line-height: 1.6;
+      margin: 0;
     }
 
     /* Why Attend Section */
@@ -590,7 +843,7 @@ import { Component, OnInit } from '@angular/core';
 
     /* Call to Action Section */
     .events-cta {
-      padding: 80px 0;
+      padding: 40px 0;
       background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
       position: relative;
       z-index: 2;
@@ -755,11 +1008,92 @@ import { Component, OnInit } from '@angular/core';
         font-size: 1.8rem;
       }
     }
+
+    /* --- Fix close button spacing --- */
+.close-btn {
+  top: 10px;   /* reduce vertical space */
+  right: 10px; /* tuck it in tighter */
+}
+
+/* Add spacing between close button and modal image */
+.modal-header {
+  position: relative;
+  padding: 40px 20px 15px; /* extra top padding so close button doesn’t overlap image */
+}
+
+/* --- Tighten modal spacing --- */
+.modal-body {
+  padding: 15px 20px; /* consistent padding */
+}
+
+.section {
+  margin: -10px;
+  padding: 30px;
+}
+
+.section:last-child {
+  margin-bottom: 0; /* remove trailing empty space */
+}
+
+.recap-item,
+.detail-item,
+.feedback,
+.stats {
+  margin-bottom: 10px; /* prevent stacked items from having too much white space */
+}
+
+    /* Image Lightbox */
+    .lightbox-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lightbox-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -60px;
+      right: 0;
+      background: none;
+      border: none;
+      font-size: 2.5rem;
+      color: white;
+      cursor: pointer;
+      z-index: 2001;
+      transition: color 0.3s ease;
+    }
+
+    .lightbox-close:hover {
+      color: #FF69B4;
+    }
+
   `]
 })
 export class EventsComponent implements OnInit {
   upcomingEvents: any[] = [];
-  pastHighlights: any[] = [];
+  pastEvents: any[] = [];
+  selectedEvent: any = null;
+  selectedImage: string | null = null;
 
   constructor() {}
 
@@ -768,52 +1102,63 @@ export class EventsComponent implements OnInit {
     this.upcomingEvents = [
       {
         id: 1,
-        title: 'AI & Machine Learning Workshop',
-        description: 'Hands-on workshop exploring the fundamentals of artificial intelligence and machine learning applications in modern science.',
-        date: new Date('2024-02-15'),
-        time: '2:00 PM - 5:00 PM',
-        location: 'Science Lab A, Room 205',
-        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop'
-      },
-      {
-        id: 2,
-        title: 'Quantum Physics Seminar',
-        description: 'Join renowned physicist Dr. Sarah Chen as she discusses the latest breakthroughs in quantum computing and their real-world applications.',
-        date: new Date('2024-02-22'),
-        time: '6:00 PM - 8:00 PM',
-        location: 'Main Auditorium',
-        image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=200&fit=crop'
-      },
-      {
-        id: 3,
-        title: 'Environmental Science Field Trip',
-        description: 'Explore local ecosystems and learn about environmental conservation efforts. Transportation and equipment provided.',
-        date: new Date('2024-03-05'),
-        time: '9:00 AM - 4:00 PM',
-        location: 'Rouge Valley Conservation Area',
-        image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=200&fit=crop'
-      }
-    ];
-
-    // Sample past highlights data
-    this.pastHighlights = [
-      {
-        id: 1,
-        title: 'Chemistry Lab Innovation Day',
-        description: 'Students showcased their innovative chemistry experiments and research projects, with over 50 participants presenting their work.',
+        title: 'Chemistry Lab Workshop',
+        description: 'Fun hands-on chemistry experiments and lab techniques.',
+        date: new Date('2024-12-15'),
+        time: 'TBD',
+        location: 'TBD',
         image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&h=200&fit=crop'
       },
       {
         id: 2,
-        title: 'Robotics Competition 2023',
-        description: 'Our team placed 2nd in the regional robotics competition, demonstrating exceptional engineering and programming skills.',
-        image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=200&fit=crop'
+        title: 'Space & Physics Talk',
+        description: 'Learn about space exploration and physics discoveries.',
+        date: new Date('2024-12-22'),
+        time: 'TBD',
+        location: 'TBD',
+        image: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=200&fit=crop'
       },
       {
         id: 3,
-        title: 'Guest Speaker: NASA Scientist',
-        description: 'Dr. Maria Rodriguez from NASA shared insights about space exploration and career opportunities in aerospace engineering.',
-        image: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=200&fit=crop'
+        title: 'Biology Lab Session',
+        description: 'Explore cells and DNA using microscopes and lab tools.',
+        date: new Date('2025-01-10'),
+        time: 'TBD',
+        location: 'TBD',
+        image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop'
+      }
+    ];
+
+    // Past events data
+    this.pastEvents = [
+      {
+        id: 1,
+        title: 'Meet and Greet',
+        description: 'Our inaugural event where members got to know each other and learned about the club\'s mission and upcoming activities.',
+        date: 'Friday, August 8, 2024',
+        location: 'Seneca York Campus - The Hive, 3:30PM-5:00PM',
+        attendance: 'Great turnout with enthusiastic participation from new and returning students',
+        image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+        dateObj: new Date('2024-08-08'),
+        highlights: [
+          'Welcome presentation introducing the Seneca Science Club',
+          'Interactive icebreaker activities to help members connect',
+          'Overview of planned events and activities for the semester',
+          'Q&A session about club membership and opportunities'
+        ],
+        takeaways: [
+          'Built strong foundation for community within the club',
+          'Established clear communication channels for future events',
+          'Generated excitement for upcoming workshops and activities'
+        ],
+        memorableMoments: 'The energy in the room was incredible as students from different programs came together, sharing their passion for science and forming new friendships.',
+        media: [
+          'https://res.cloudinary.com/da9gwrtit/image/upload/v1755902352/IMG-20250822-WA0017_e0zmcc.jpg',
+          'https://res.cloudinary.com/da9gwrtit/image/upload/v1755902353/IMG-20250822-WA0021_qmjaik.jpg'
+        ],
+        feedback: 'Members expressed great enthusiasm for future events and appreciated the welcoming atmosphere. Many commented on how well-organized the event was.',
+        stats: 'High engagement throughout the event with active participation in discussions and networking activities.',
+        acknowledgments: 'Thanks to all participants who made this inaugural event a success! Special appreciation for the enthusiasm and energy everyone brought to The Hive.'
       }
     ];
   }
@@ -828,5 +1173,25 @@ export class EventsComponent implements OnInit {
   subscribeToUpdates() {
     // Placeholder for subscription functionality
     alert('Thank you for your interest! Event subscription feature coming soon.');
+  }
+
+  openEventModal(event: any) {
+    this.selectedEvent = event;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal() {
+    this.selectedEvent = null;
+    document.body.style.overflow = 'auto';
+  }
+
+  openImageLightbox(imageUrl: string) {
+    this.selectedImage = imageUrl;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeLightbox() {
+    this.selectedImage = null;
+    document.body.style.overflow = 'auto';
   }
 }

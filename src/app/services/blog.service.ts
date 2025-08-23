@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface BlogPost {
   id: string;
@@ -22,7 +23,7 @@ interface BlogPost {
   providedIn: 'root'
 })
 export class BlogService {
-  private apiUrl = 'http://localhost:5000/api/blog';
+  private apiUrl = `${environment.apiUrl}/blog`;
 
   constructor(private http: HttpClient) {}
 
@@ -36,6 +37,10 @@ export class BlogService {
 
   createPost(post: Partial<BlogPost>): Observable<BlogPost> {
     return this.http.post<BlogPost>(this.apiUrl, post);
+  }
+
+  createPostSimple(postData: any): Observable<BlogPost> {
+    return this.http.post<BlogPost>(`${this.apiUrl}/simple`, postData);
   }
 
   updatePost(id: string, post: Partial<BlogPost>): Observable<BlogPost> {

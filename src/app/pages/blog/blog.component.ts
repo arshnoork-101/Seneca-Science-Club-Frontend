@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { BlogService } from '../../services/blog.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-blog',
@@ -64,7 +66,7 @@ import { Router } from '@angular/router';
           <div class="hero-actions">
             <button class="write-btn" (click)="showAuthModal()">
               <span class="btn-icon">✍️</span>
-              Contribute Article
+              Contribute Research
             </button>
             <button class="browse-btn" (click)="scrollToArticles()">
               <span class="btn-icon">🔍</span>
@@ -106,7 +108,7 @@ import { Router } from '@angular/router';
                 <div class="article-header">
                   <h3>{{ article.title }}</h3>
                   <div class="article-meta">
-                    <span class="author">By {{ article.author }}</span>
+                    <span class="author">By {{ getAuthorName(article.author) }}</span>
                     <span class="date">{{ article.date | date:'MMM dd, yyyy' }}</span>
                   </div>
                 </div>
@@ -168,7 +170,7 @@ import { Router } from '@angular/router';
             <div class="article-detail-info">
               <h1 class="article-detail-title">{{ selectedArticle.title }}</h1>
               <div class="article-detail-meta">
-                <span class="article-detail-author">By {{ selectedArticle.author }}</span>
+                <span class="article-detail-author">By {{ getAuthorName(selectedArticle.author) }}</span>
                 <span class="article-detail-date">{{ selectedArticle.date | date:'MMM dd, yyyy' }}</span>
               </div>
               <div class="article-detail-tags">
@@ -299,7 +301,7 @@ import { Router } from '@angular/router';
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 2;
+      z-index: 10;
       background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1f1f1f 100%);
     }
 
@@ -308,6 +310,8 @@ import { Router } from '@angular/router';
       max-width: 800px;
       padding: 0 20px;
       animation: fadeInUp 1s ease-out;
+      position: relative;
+      z-index: 10;
     }
 
     .hero-badge {
@@ -382,6 +386,8 @@ import { Router } from '@angular/router';
       justify-content: center;
       flex-wrap: wrap;
       margin-top: 2rem;
+      position: relative;
+      z-index: 10;
     }
 
     .write-btn, .browse-btn {
@@ -395,6 +401,8 @@ import { Router } from '@angular/router';
       align-items: center;
       gap: 10px;
       border: none;
+      position: relative;
+      z-index: 10;
     }
 
     .write-btn, .browse-btn {
@@ -1176,36 +1184,25 @@ import { Router } from '@angular/router';
       }
 
       .article-detail-image {
-        height: 200px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hero-title {
-        font-size: 2rem;
-      }
-
-      .hero-subtitle {
-        font-size: 1rem;
-      }
-
-      .articles-icon {
-        font-size: 4rem;
+        height: 250px;
       }
     }
   `]
 })
 export class BlogComponent implements OnInit {
   articles: any[] = [];
-  showAuth = false;
-  showEditor = false;
-  showArticleDetail = false;
+  filteredArticles: any[] = [];
+  searchTerm: string = '';
+  selectedTag: string = '';
+  showEditor: boolean = false;
+  showAuth: boolean = false;
+  showArticleDetail: boolean = false;
   selectedArticle: any = null;
-  accessCode = '';
-  authError = '';
-  editingArticle: any = null;
-  searchTerm = '';
-  selectedTag = '';
+  accessCode: string = '';
+  authError: string = '';
+  showDetail: boolean = false;
+  VALID_ACCESS_CODE: string = 'SSC2024MENTOR';
+  
   articleForm = {
     title: '',
     author: '',
@@ -1214,72 +1211,73 @@ export class BlogComponent implements OnInit {
     tags: '',
     image: ''
   };
+  
+  editingArticle: any = null;
 
-  // Store access code (in production, this should be handled securely)
-  private readonly VALID_ACCESS_CODE = 'SSC2024MENTOR';
-
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private blogService: BlogService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.loadArticles();
   }
 
   loadArticles() {
-    // Load articles from localStorage or initialize empty array
-    const storedArticles = localStorage.getItem('ssc_articles');
-    if (storedArticles) {
-      this.articles = JSON.parse(storedArticles);
-    } else {
-      // Initialize with sample articles
-      this.articles = [
-        {
-          id: 1,
-          title: 'The Future of Quantum Computing',
-          author: 'Dr. Sarah Chen',
-          date: new Date('2024-01-15'),
-          excerpt: 'Exploring the revolutionary potential of quantum computers and their impact on scientific research. From cryptography to drug discovery, quantum computing promises to solve problems that are impossible for classical computers.',
-          image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-          body: `Quantum computing represents one of the most exciting frontiers in modern science and technology. Unlike classical computers that use bits to process information in binary states (0 or 1), quantum computers use quantum bits or "qubits" that can exist in multiple states simultaneously through a phenomenon called superposition.
+    // Load articles from backend API
+    this.blogService.getPosts().subscribe({
+      next: (articles) => {
+        this.articles = articles;
+        this.filteredArticles = articles;
+      },
+      error: (error) => {
+        console.error('Error loading articles:', error);
+        // Fallback to default articles if backend is not available
+        this.setDefaultArticles();
+        this.filteredArticles = this.articles;
+      }
+    });
+  }
 
-This fundamental difference allows quantum computers to perform certain calculations exponentially faster than their classical counterparts. For instance, while a classical computer might take thousands of years to factor large numbers used in encryption, a sufficiently powerful quantum computer could accomplish this in hours or days.
-
-The implications for scientific research are profound. In drug discovery, quantum computers could simulate molecular interactions with unprecedented accuracy, potentially accelerating the development of new medicines. In materials science, they could help design new materials with specific properties by modeling atomic-level interactions.
-
-However, significant challenges remain. Quantum computers are extremely sensitive to environmental interference, requiring near-absolute zero temperatures and sophisticated error correction systems. Current quantum computers are still in their infancy, with limited numbers of qubits and high error rates.
-
-Despite these challenges, major technology companies and research institutions are investing billions of dollars in quantum computing research. IBM, Google, and other tech giants have already demonstrated quantum supremacy in specific tasks, marking important milestones in the field's development.
-
-As we look to the future, quantum computing promises to revolutionize fields ranging from artificial intelligence to climate modeling, opening new possibilities for scientific discovery and technological innovation.`,
-          tags: ['Physics', 'Technology', 'Innovation']
-        },
-        {
-          id: 2,
-          title: 'CRISPR Gene Editing: Revolutionizing Medicine',
-          author: 'Prof. Michael Rodriguez',
-          date: new Date('2024-01-10'),
-          excerpt: 'An in-depth look at CRISPR-Cas9 technology and its applications in treating genetic diseases. This revolutionary tool allows scientists to make precise edits to DNA, opening new possibilities for treating previously incurable conditions.',
-          image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-          body: `CRISPR-Cas9 has emerged as one of the most powerful and versatile tools in modern biology, offering unprecedented precision in editing genetic material. Originally discovered as part of bacterial immune systems, CRISPR (Clustered Regularly Interspaced Short Palindromic Repeats) has been adapted for use in a wide range of organisms, from bacteria to humans.
-
-The technology works like molecular scissors, allowing scientists to cut DNA at specific locations and either remove, add, or replace genetic material. This precision has opened up new possibilities for treating genetic diseases that were previously considered incurable.
-
-One of the most promising applications is in treating sickle cell disease, a genetic disorder that affects millions worldwide. Clinical trials using CRISPR to edit patients' bone marrow cells have shown remarkable success, with some patients achieving complete remission from their symptoms.
-
-Beyond treating existing diseases, CRISPR also holds promise for preventing genetic disorders before they manifest. By editing embryonic cells, scientists could potentially eliminate hereditary diseases from family lines entirely, though this application raises important ethical considerations.
-
-The technology isn't limited to human medicine. Agricultural applications include developing crops that are more resistant to pests, diseases, and climate change. Researchers are also exploring CRISPR's potential in conservation efforts, such as developing coral reefs that can withstand ocean acidification.
-
-However, the power of CRISPR also brings responsibility. The scientific community continues to debate the ethical implications of genetic editing, particularly when it comes to making heritable changes to the human genome. International guidelines and regulations are being developed to ensure the technology is used safely and ethically.
-
-As CRISPR technology continues to evolve, with new variants offering even greater precision and reduced off-target effects, we can expect to see more breakthrough treatments and applications in the coming years.`,
-          tags: ['Biology', 'Medicine', 'Genetics']
-        }
-      ];
-      this.saveArticles();
-    }
+  setDefaultArticles() {
+    this.articles = [
+      {
+        id: 1,
+        title: 'Breakthrough in Alzheimer\'s Research: New Drug Shows Promise',
+        author: 'Dr. Elena Vasquez',
+        date: new Date('2024-08-15'),
+        excerpt: 'Recent clinical trials of lecanemab demonstrate significant reduction in amyloid plaques and cognitive decline in early-stage Alzheimer\'s patients, offering new hope for millions affected by this devastating disease.',
+        image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        body: 'Alzheimer\'s disease affects over 55 million people worldwide, making it the most common form of dementia. Recent breakthrough results from Phase III clinical trials of lecanemab have provided the first clear evidence that targeting amyloid-beta plaques in the brain can slow cognitive decline in patients with early Alzheimer\'s disease. The drug works as a monoclonal antibody that specifically targets and removes amyloid-beta protofibrils from the brain.',
+        tags: ['Neuroscience', 'Medicine', 'Clinical Research']
+      },
+      {
+        id: 2,
+        title: 'Climate Change Accelerates Arctic Ice Loss: New Satellite Data',
+        author: 'Dr. James Arctic',
+        date: new Date('2024-08-10'),
+        excerpt: 'Latest satellite observations reveal Arctic sea ice is declining at an unprecedented rate of 13% per decade, with profound implications for global climate patterns and sea level rise.',
+        image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        body: 'The Arctic region is experiencing climate change at twice the global average rate. New satellite data provides the most detailed picture yet of how rapidly Arctic ice is disappearing. Since satellite records began in 1979, Arctic sea ice extent has declined by approximately 13% per decade during September. This ice loss is already affecting global weather patterns and contributing to sea level rise.',
+        tags: ['Climate Science', 'Environmental Research', 'Oceanography']
+      },
+      {
+        id: 3,
+        title: 'Revolutionary Cancer Treatment: CAR-T Therapy Success',
+        author: 'Dr. Sarah Chen',
+        date: new Date('2024-08-05'),
+        excerpt: 'New clinical trial results show CAR-T cell therapy achieving remarkable remission rates in previously untreatable blood cancers, offering hope for thousands of patients.',
+        image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        body: 'Chimeric Antigen Receptor T-cell (CAR-T) therapy represents one of the most significant breakthroughs in cancer treatment in decades. This revolutionary approach involves genetically modifying a patient\'s own immune cells to better recognize and attack cancer cells. Recent clinical trial results have shown unprecedented success rates, with some patients achieving complete remission from previously incurable blood cancers.',
+        tags: ['Oncology', 'Immunotherapy', 'Medical Innovation']
+      }
+    ];
   }
 
   saveArticles() {
+    // Save articles via backend API instead of localStorage
+    // This method will be updated when backend integration is complete
     localStorage.setItem('ssc_articles', JSON.stringify(this.articles));
   }
 
@@ -1296,12 +1294,26 @@ As CRISPR technology continues to evolve, with new variants offering even greate
   }
 
   verifyCode() {
-    if (this.accessCode === this.VALID_ACCESS_CODE) {
-      this.hideAuthModal();
-      this.openEditor();
-    } else {
-      this.authError = 'Invalid access code. Please try again.';
-    }
+    this.authService.verifyAccessCode(this.accessCode).subscribe({
+      next: (isValid: boolean) => {
+        if (isValid) {
+          this.hideAuthModal();
+          this.openEditor();
+        } else {
+          this.authError = 'Invalid access code. Please try again.';
+        }
+      },
+      error: (error: any) => {
+        console.error('Error verifying access code:', error);
+        // Fallback to hardcoded verification for development
+        if (this.accessCode === this.VALID_ACCESS_CODE) {
+          this.hideAuthModal();
+          this.openEditor();
+        } else {
+          this.authError = 'Invalid access code. Please try again.';
+        }
+      }
+    });
   }
 
   openEditor(article?: any) {
@@ -1309,11 +1321,11 @@ As CRISPR technology continues to evolve, with new variants offering even greate
     if (article) {
       this.articleForm = {
         title: article.title,
-        author: article.author,
+        author: this.getAuthorName(article.author),
         excerpt: article.excerpt,
         body: article.body,
         tags: article.tags.join(', '),
-        image: article.image || ''
+        image: article.image
       };
     } else {
       this.articleForm = {
@@ -1338,43 +1350,82 @@ As CRISPR technology continues to evolve, with new variants offering even greate
       return;
     }
 
-    const tagsArray = this.articleForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+    const tagsArray = this.articleForm.tags.split(',').map((tag: any) => tag.trim()).filter((tag: any) => tag);
+    
+    // Parse author name for API compatibility
+    const authorParts = this.articleForm.author.split(' ');
+    const authorObj = {
+      firstName: authorParts[0] || '',
+      lastName: authorParts.slice(1).join(' ') || ''
+    };
+    
+    const articleData = {
+      title: this.articleForm.title,
+      author: authorObj,
+      excerpt: this.articleForm.excerpt,
+      content: this.articleForm.body, // API uses 'content' instead of 'body'
+      tags: tagsArray,
+      imageUrl: this.articleForm.image // API uses 'imageUrl' instead of 'image'
+    };
 
     if (this.editingArticle) {
-      // Update existing article
-      const index = this.articles.findIndex(a => a.id === this.editingArticle.id);
-      if (index !== -1) {
-        this.articles[index] = {
-          ...this.editingArticle,
-          title: this.articleForm.title,
-          author: this.articleForm.author,
-          excerpt: this.articleForm.excerpt,
-          body: this.articleForm.body,
-          tags: tagsArray,
-          image: this.articleForm.image
-        };
-      }
+      // Update existing article via API
+      this.blogService.updatePost(this.editingArticle.id, articleData).subscribe({
+        next: (updatedArticle) => {
+          const index = this.articles.findIndex((a: any) => a.id === this.editingArticle.id);
+          if (index !== -1) {
+            this.articles[index] = updatedArticle;
+          }
+          this.hideEditor();
+        },
+        error: (error) => {
+          console.error('Error updating article:', error);
+          // Fallback to local update
+          const index = this.articles.findIndex((a: any) => a.id === this.editingArticle.id);
+          if (index !== -1) {
+            this.articles[index] = { ...this.editingArticle, ...articleData };
+          }
+          this.saveArticles();
+          this.hideEditor();
+        }
+      });
     } else {
-      // Create new article
-      const newArticle = {
-        id: Date.now(),
-        title: this.articleForm.title,
-        author: this.articleForm.author,
-        date: new Date(),
-        excerpt: this.articleForm.excerpt,
-        body: this.articleForm.body,
-        tags: tagsArray,
-        image: this.articleForm.image
+      // Create new article via simplified API
+      const simpleArticleData = {
+        ...articleData,
+        accessCode: this.accessCode // Include access code for verification
       };
-      this.articles.unshift(newArticle);
+      
+      this.blogService.createPostSimple(simpleArticleData).subscribe({
+        next: (newArticle) => {
+          this.articles.unshift(newArticle);
+          this.filteredArticles = this.articles;
+          this.hideEditor();
+        },
+        error: (error) => {
+          console.error('Error creating article:', error);
+          // Fallback to local creation
+          const newArticle = {
+            id: Date.now(),
+            title: this.articleForm.title,
+            author: this.articleForm.author, // Keep as string for localStorage
+            excerpt: this.articleForm.excerpt,
+            body: this.articleForm.body,
+            tags: tagsArray,
+            image: this.articleForm.image,
+            date: new Date()
+          };
+          this.articles.unshift(newArticle);
+          this.filteredArticles = this.articles;
+          this.saveArticles();
+          this.hideEditor();
+        }
+      });
     }
-
-    this.saveArticles();
-    this.hideEditor();
   }
 
   readArticle(articleId: number) {
-    this.selectedArticle = this.articles.find(article => article.id === articleId);
+    this.selectedArticle = this.articles.find((article: any) => article.id === articleId);
     this.showArticleDetail = true;
   }
 
@@ -1392,7 +1443,7 @@ As CRISPR technology continues to evolve, with new variants offering even greate
     return this.articles.filter(article => {
       const matchesSearch = !this.searchTerm || 
         article.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        article.author.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        this.getAuthorName(article.author).toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         article.excerpt.toLowerCase().includes(this.searchTerm.toLowerCase());
       
       const matchesTag = !this.selectedTag || 
@@ -1408,8 +1459,17 @@ As CRISPR technology continues to evolve, with new variants offering even greate
   }
 
   getUniqueAuthors(): number {
-    const authors = [...new Set(this.articles.map(article => article.author))];
+    const authors = [...new Set(this.articles.map(article => this.getAuthorName(article.author)))];
     return authors.length;
+  }
+
+  getAuthorName(author: any): string {
+    if (typeof author === 'string') {
+      return author;
+    } else if (author && typeof author === 'object') {
+      return `${author.firstName} ${author.lastName}`.trim();
+    }
+    return 'Unknown Author';
   }
 
   trackByArticleId(index: number, article: any): number {
@@ -1434,6 +1494,13 @@ As CRISPR technology continues to evolve, with new variants offering even greate
   }
 
   getFormattedContent(content: string): string {
-    return content.replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>');
+    return content.replace(/\n/g, '<br>');
+  }
+
+  updateToScienceArticles() {
+    // Clear localStorage and set new science articles
+    localStorage.removeItem('ssc_articles');
+    this.setDefaultArticles();
+    this.saveArticles();
   }
 }

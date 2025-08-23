@@ -173,6 +173,9 @@ import { Component } from '@angular/core';
       color: #b0b0b0;
       line-height: 1.6;
       font-style: italic;
+      border-top: 1px solid #333;
+      padding-top: 1rem;
+      margin-top: 1rem;
     }
 
 
@@ -253,19 +256,19 @@ import { Component } from '@angular/core';
 export class TeamComponent {
   leaders = [
     {
-      name: 'Sarah Chen',
+      name: 'Oakar',
       program: 'President',
       funLine: 'Leading the club towards scientific excellence! 🚀',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80'
-    },
-    {
-      name: 'Marcus Johnson',
-      program: 'Vice-President',
-      funLine: 'Supporting innovation and collaboration! 🤝',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80'
     },
     {
-      name: 'Emily Rodriguez',
+      name: 'Arshnoor Kaur',
+      program: 'Vice-President',
+      funLine: 'Supporting innovation and collaboration! 🤝',
+      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80'
+    },
+    {
+      name: 'Majo Mostajo',
       program: 'Treasurer',
       funLine: 'Managing resources for maximum scientific impact! 💰',
       image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80'

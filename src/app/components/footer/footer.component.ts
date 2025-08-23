@@ -210,29 +210,129 @@ import { Component } from '@angular/core';
       .footer-content {
         grid-template-columns: 1fr;
         text-align: center;
+        gap: 30px;
+        padding: 0 15px;
+      }
+
+      .footer-section h3 {
+        font-size: 1.3rem;
+      }
+
+      .footer-section h4 {
+        font-size: 1.1rem;
       }
 
       .footer-bottom-content {
         flex-direction: column;
         text-align: center;
+        gap: 15px;
       }
 
       .footer-bottom-links {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .contact-info p {
         justify-content: center;
       }
     }
 
     @media (max-width: 480px) {
       .footer {
-        padding-top: 40px;
+        padding-top: 30px;
       }
 
       .footer-content {
-        gap: 30px;
+        gap: 25px;
+        padding: 0 10px;
+      }
+
+      .footer-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+      }
+
+      .footer-section h4 {
+        font-size: 1rem;
+        margin-bottom: 15px;
+      }
+
+      .footer-section p {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
       }
 
       .social-links {
         justify-content: center;
+        gap: 12px;
+      }
+
+      .social-link {
+        width: 36px;
+        height: 36px;
+      }
+
+      .footer-links li {
+        margin-bottom: 8px;
+      }
+
+      .footer-links a {
+        font-size: 0.9rem;
+      }
+
+      .contact-info p {
+        font-size: 0.85rem;
+        justify-content: center;
+        margin-bottom: 8px;
+      }
+
+      .footer-bottom {
+        padding: 15px 0;
+      }
+
+      .footer-bottom-content {
+        padding: 0 10px;
+      }
+
+      .footer-bottom p {
+        font-size: 0.85rem;
+      }
+
+      .footer-bottom-links a {
+        font-size: 0.8rem;
+      }
+
+      .footer-bottom-links {
+        gap: 15px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .footer-content {
+        padding: 0 5px;
+      }
+
+      .footer-section h3 {
+        font-size: 1.1rem;
+      }
+
+      .footer-section h4 {
+        font-size: 0.95rem;
+      }
+
+      .footer-section p {
+        font-size: 0.85rem;
+      }
+
+      .social-link {
+        width: 32px;
+        height: 32px;
+      }
+
+      .footer-bottom-links {
+        flex-direction: column;
+        gap: 10px;
       }
     }
   `]

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 interface User {
   id: string;
@@ -26,7 +27,7 @@ interface AuthStatus {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   public authStatus$ = new BehaviorSubject<AuthStatus>({ isLoggedIn: false, isAdmin: false });
@@ -88,5 +89,10 @@ export class AuthService {
   isAdmin(): boolean {
     const currentUser = this.currentUserSubject.value;
     return currentUser?.role === 'admin' || false;
+  }
+
+  verifyAccessCode(accessCode: string): Observable<boolean> {
+    return this.http.post<{ valid: boolean }>(`${this.apiUrl}/verify-code`, { accessCode })
+      .pipe(map(response => response.valid));
   }
 }
