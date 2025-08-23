@@ -335,6 +335,23 @@ import { Component } from '@angular/core';
         gap: 10px;
       }
     }
+
+    @media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+    text-align: left;  /* keep text aligned properly */
+    gap: 20px;
+  }
+
+  .footer-section {
+    text-align: left;
+  }
+
+  .social-links {
+    justify-content: flex-start;
+  }
+}
+
   `]
 })
 export class FooterComponent {}

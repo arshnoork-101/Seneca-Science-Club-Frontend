@@ -83,6 +83,7 @@ import { Component } from '@angular/core';
       padding: 3rem 0;
       position: relative;
       z-index: 2;
+      height: 100%;
     }
 
 
@@ -251,6 +252,26 @@ import { Component } from '@angular/core';
         align-items: center;
       }
     }
+
+    .leader-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* ensures equal height cards */
+}
+
+.leader-image {
+  flex: 1; /* take up available height */
+  height: 100%;
+  border-radius: 15px 15px 0 0;
+  overflow: hidden;
+}
+
+.leader-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* keeps aspect ratio while filling */
+}
+
   `]
 })
 export class TeamComponent {
@@ -265,7 +286,7 @@ export class TeamComponent {
       name: 'Arshnoor Kaur',
       program: 'Vice-President',
       funLine: 'Supporting innovation and collaboration! 🤝',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80'
+      image: 'https://res.cloudinary.com/da9gwrtit/image/upload/v1731818211/oc53fp15cp1gg5aogucq.jpg'
     },
     {
       name: 'Majo Mostajo',
