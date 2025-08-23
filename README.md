@@ -102,26 +102,6 @@ Update image URLs in components with your Cloudinary cloud name:
 - **Touch-friendly** interactions
 - **Optimized images** for different screen sizes
 
-## 🎯 Development Guidelines
-
-### Code Style
-- Use **TypeScript** strict mode
-- Follow **Angular style guide**
-- Use **SCSS** for styling
-- Implement **responsive design** patterns
-
-### Component Structure
-```typescript
-@Component({
-  selector: 'app-component',
-  template: `...`,
-  styles: [`...`]
-})
-export class ComponentName implements OnInit {
-  // Component logic
-}
-```
-
 ## 🚀 Build & Deployment
 
 ### Development Build

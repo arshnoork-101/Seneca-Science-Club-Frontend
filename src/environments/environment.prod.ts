@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-render-backend-url.onrender.com/api',
-  cloudinaryCloudName: 'your-cloudinary-cloud-name'
+  apiUrl: 'https://ssc-backend-49m0.onrender.com/api',
+  cloudinaryCloudName: 'da9gwrtit'
 };
