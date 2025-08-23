@@ -6,12 +6,14 @@ import { Router } from '@angular/router';
   template: `
     <mat-toolbar class="header-toolbar">
       <div class="header-content">
-        <div class="logo-section">
-          <button mat-button routerLink="/" class="logo-button">
-            <mat-icon class="logo-icon">science</mat-icon>
-            <span class="logo-text">Seneca Science Club</span>
-          </button>
-        </div>
+       <div class="logo-section">
+  <button mat-button routerLink="/" class="logo-button">
+    <img src="https://res.cloudinary.com/da9gwrtit/image/upload/v1755919789/ssc-logo_blczd3.jpg" 
+         alt="Seneca Science Club" 
+         height="60"/>
+  </button>
+      <span class="logo-text">Seneca Science Club</span>
+</div>
 
         <nav class="nav-menu" [class.hidden]="isMobile">
           <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
@@ -133,7 +135,7 @@ import { Router } from '@angular/router';
     .logo-text {
       font-size: 1.3rem;
       font-weight: 600;
-      margin-left: 12px;
+      margin: 12px;
       color: #ffffff;
       text-transform: uppercase;
       letter-spacing: 1px;
