@@ -9,13 +9,13 @@ import { Component } from '@angular/core';
           <h3>Seneca Science Club</h3>
           <p>Igniting curiosity, fostering innovation, and building a community of science enthusiasts at Seneca College.</p>
           <div class="social-links">
-            <a href="https://instagram.com/senecascienceclub" target="_blank" class="social-link">
+            <a href="https://www.instagram.com/seneca_science_club" target="_blank" class="social-link">
               <mat-icon>camera_alt</mat-icon>
             </a>
-            <a href="https://linkedin.com/company/senecascienceclub" target="_blank" class="social-link">
+            <a href="https://www.linkedin.com/company/seneca-science-club" target="_blank" class="social-link">
               <mat-icon>business</mat-icon>
             </a>
-            <a href="mailto:scienceclub@senecacollege.ca" class="social-link">
+            <a href="info@ssfinc.ca" class="social-link">
               <mat-icon>email</mat-icon>
             </a>
           </div>

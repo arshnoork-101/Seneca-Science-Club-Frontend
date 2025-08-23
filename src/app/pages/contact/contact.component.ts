@@ -29,14 +29,14 @@ import { Component } from '@angular/core';
                     <p>Join our community server</p>
                   </div>
                 </a>
-                <a href="#" class="social-link instagram" target="_blank">
+                <a href="https://www.instagram.com/seneca_science_club" class="social-link instagram" target="_blank">
                   <div class="social-icon">📸</div>
                   <div class="social-info">
                     <h3>Instagram</h3>
                     <p>Follow our latest updates</p>
                   </div>
                 </a>
-                <a href="#" class="social-link linkedin" target="_blank">
+                <a href="https://www.linkedin.com/company/seneca-science-club" class="social-link linkedin" target="_blank">
                   <div class="social-icon">💼</div>
                   <div class="social-info">
                     <h3>LinkedIn</h3>
