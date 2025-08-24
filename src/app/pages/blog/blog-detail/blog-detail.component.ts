@@ -146,6 +146,68 @@ import { AuthService } from '../../../services/auth.service';
       75% { transform: translateY(-15px) rotate(3deg); }
     }
 
+    /* Responsive science background - reduce tool visibility on small screens */
+    @media (max-width: 1200px) {
+      .large-science-tool {
+        font-size: 5.5rem;
+        opacity: 0.08;
+      }
+      /* Hide some tools on medium screens */
+      .tool-5, .tool-6, .tool-7, .tool-8 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .science-background {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+      .large-science-tool {
+        font-size: 4.5rem;
+        opacity: 0.05;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 1;
+        text-align: center;
+        margin: 10px;
+      }
+      /* Hide more tools on small screens */
+      .tool-3, .tool-4 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .science-background {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 10px;
+      }
+      .large-science-tool {
+        font-size: 3.5rem;
+        opacity: 0.03;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 1;
+        text-align: center;
+        margin: 15px 5px;
+      }
+      /* Keep only 1 tool on very small screens */
+      .tool-2 {
+        display: none;
+      }
+    }
+
     .content {
       position: relative;
       z-index: 2;

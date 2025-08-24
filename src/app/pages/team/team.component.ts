@@ -41,7 +41,7 @@ import { Component } from '@angular/core';
       text-align: center;
       margin-bottom: 4rem;
       margin-top: -10px;
-      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;

@@ -4,14 +4,25 @@ import { Component } from '@angular/core';
   selector: 'app-contact',
   template: `
     <div class="contact-container">
-
-      <!-- Top Heading -->
-      <div class="connect-header">
-        <h1 class="connect-title">Let's Connect</h1>
-        <p class="connect-subtitle">
-          Whether you have questions, ideas, or just want to get involved — we’d love to hear from you.
-        </p>
+      <!-- Science Tools Background -->
+      <div class="science-background">
+        <div class="large-science-tool tool-1">🧪</div>
+        <div class="large-science-tool tool-2">🔬</div>
+        <div class="large-science-tool tool-3">⚗️</div>
+        <div class="large-science-tool tool-4">🔍</div>
+        <div class="large-science-tool tool-5">🧬</div>
+        <div class="large-science-tool tool-6">⚛️</div>
       </div>
+
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <h1 class="hero-title">Let's Connect</h1>
+          <p class="hero-subtitle">
+            Whether you have questions, ideas, or just want to get involved — we'd love to hear from you.
+          </p>
+        </div>
+      </section>
 
       <section class="contact-methods">
         <div class="container">
@@ -97,12 +108,146 @@ import { Component } from '@angular/core';
       margin-bottom: 50px;
     }
 
-    .connect-title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 20px;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 1rem 0;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: #b0b0b0;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+
+    /* Science Background */
+    .science-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+    }
+
+    .large-science-tool {
+      position: absolute;
+      font-size: 7rem;
+      opacity: 0.1;
+      animation: floatAround 15s infinite linear;
+      transform-origin: center;
+      color: #333;
+    }
+
+    .tool-1 { top: 10%; left: 10%; animation-delay: 0s; }
+    .tool-2 { top: 20%; right: 15%; animation-delay: -3s; }
+    .tool-3 { top: 40%; left: 5%; animation-delay: -6s; }
+    .tool-4 { top: 60%; right: 10%; animation-delay: -9s; }
+    .tool-5 { top: 80%; left: 15%; animation-delay: -12s; }
+    .tool-6 { top: 30%; right: 5%; animation-delay: -15s; }
+
+    @keyframes floatAround {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-20px) rotate(5deg); }
+      50% { transform: translateY(-10px) rotate(-5deg); }
+      75% { transform: translateY(-15px) rotate(3deg); }
+    }
+
+    /* Responsive science background */
+    @media (max-width: 1200px) {
+      .large-science-tool {
+        font-size: 5.5rem;
+        opacity: 0.08;
+      }
+      .tool-5, .tool-6 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .science-background {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+      .large-science-tool {
+        font-size: 4.5rem;
+        opacity: 0.05;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 1;
+        text-align: center;
+        margin: 10px;
+      }
+      .tool-3, .tool-4 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .science-background {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 10px;
+      }
+      .large-science-tool {
+        font-size: 3.5rem;
+        opacity: 0.03;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 1;
+        text-align: center;
+        margin: 15px 5px;
+      }
+      .tool-2 {
+        display: none;
+      }
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .connect-subtitle {
@@ -136,12 +281,24 @@ import { Component } from '@angular/core';
     }
 
     .section-title {
-      font-size: 2rem;
+      font-size: 2.5rem;
       font-weight: 700;
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      margin-bottom: 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .form-section h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .section-subtitle {

@@ -100,8 +100,8 @@ import { AuthService } from '../../services/auth.service';
         <div class="container">
           <div class="articles-grid" *ngIf="getFilteredArticles().length > 0">
             <div class="article-card" *ngFor="let article of getFilteredArticles(); trackBy: trackByArticleId">
-              <div class="article-image" *ngIf="article.image">
-                <img [src]="article.image" [alt]="article.title" />
+              <div class="article-image">
+                <img [src]="article.imageUrl || article.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800'" [alt]="article.title" />
                 <div class="image-overlay"></div>
               </div>
               <div class="article-content">
@@ -164,8 +164,8 @@ import { AuthService } from '../../services/auth.service';
             <button class="close-btn" (click)="hideArticleDetail()">×</button>
           </div>
           <div class="article-detail-body" *ngIf="selectedArticle">
-            <div class="article-detail-image" *ngIf="selectedArticle.image">
-              <img [src]="selectedArticle.image" [alt]="selectedArticle.title" />
+            <div class="article-detail-image" *ngIf="selectedArticle.imageUrl || selectedArticle.image">
+              <img [src]="selectedArticle.imageUrl || selectedArticle.image" [alt]="selectedArticle.title" />
             </div>
             <div class="article-detail-info">
               <h1 class="article-detail-title">{{ selectedArticle.title }}</h1>
@@ -180,7 +180,7 @@ import { AuthService } from '../../services/auth.service';
                 <p>{{ selectedArticle.excerpt }}</p>
               </div>
               <div class="article-detail-content-text">
-                <div [innerHTML]="getFormattedContent(selectedArticle.body)"></div>
+                <div [innerHTML]="getFormattedContent(selectedArticle.content || selectedArticle.body)"></div>
               </div>
             </div>
           </div>
@@ -294,6 +294,68 @@ import { AuthService } from '../../services/auth.service';
       75% { transform: translateY(-15px) rotate(3deg); }
     }
 
+    /* Responsive science background - reduce tool visibility on small screens */
+    @media (max-width: 1200px) {
+      .large-science-tool {
+        font-size: 5.5rem;
+        opacity: 0.12;
+      }
+      /* Hide some tools on medium screens */
+      .tool-9, .tool-10, .tool-11, .tool-12, .tool-13, .tool-14, .tool-15, .tool-16 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .science-background {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+      .large-science-tool {
+        font-size: 4.5rem;
+        opacity: 0.08;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 1;
+        text-align: center;
+        margin: 10px;
+      }
+      /* Hide more tools on small screens */
+      .tool-5, .tool-6, .tool-7, .tool-8 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .science-background {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 10px;
+      }
+      .large-science-tool {
+        font-size: 3.5rem;
+        opacity: 0.05;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        flex: 1;
+        text-align: center;
+        margin: 15px 5px;
+      }
+      /* Keep only 2 tools on very small screens */
+      .tool-3, .tool-4 {
+        display: none;
+      }
+    }
+
     /* Hero Section */
     .hero-section {
       position: relative;
@@ -332,10 +394,9 @@ import { AuthService } from '../../services/auth.service';
     .hero-title {
       font-size: 3.5rem;
       font-weight: 700;
-      margin-bottom: 1.5rem;
       line-height: 1.2;
       margin-top: -30px;
-      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -361,11 +422,22 @@ import { AuthService } from '../../services/auth.service';
       text-align: center;
     }
 
-    .stat-number {
+    .stat-value {
       display: block;
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .section-title {
       font-size: 2.5rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -576,6 +648,8 @@ import { AuthService } from '../../services/auth.service';
       border: 1px solid #333;
       display: flex;
       flex-direction: column;
+      height: 500px;
+      max-height: 500px;
     }
 
     .article-card:hover {
@@ -585,8 +659,10 @@ import { AuthService } from '../../services/auth.service';
 
     .article-image {
       position: relative;
-      height: 200px;
+      height: 220px;
+      min-height: 220px;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     .article-image img {
@@ -610,18 +686,25 @@ import { AuthService } from '../../services/auth.service';
     }
 
     .article-content {
-      padding: 25px;
+      padding: 20px;
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
     }
 
     .article-header h3 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 600;
       color: #ffffff;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .article-meta {
@@ -642,14 +725,22 @@ import { AuthService } from '../../services/auth.service';
 
     .article-excerpt {
       color: #cccccc;
-      line-height: 1.6;
-      margin-bottom: 15px;
-      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
     }
 
     .article-tags {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       margin-top: auto;
+      max-height: 60px;
+      overflow: hidden;
     }
 
     .tag {
@@ -667,12 +758,14 @@ import { AuthService } from '../../services/auth.service';
       background: linear-gradient(135deg, #333 0%, #555 100%);
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 8px 16px;
       border-radius: 20px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
       width: 100%;
+      font-size: 0.9rem;
+      flex-shrink: 0;
     }
 
     .read-more-btn:hover {
@@ -950,6 +1043,7 @@ import { AuthService } from '../../services/auth.service';
       z-index: 1000;
       padding: 20px;
       animation: fadeIn 0.3s ease-out;
+      overflow-y: auto;
     }
 
     .article-detail-content {
@@ -957,11 +1051,13 @@ import { AuthService } from '../../services/auth.service';
       border-radius: 20px;
       max-width: 900px;
       width: 100%;
-      max-height: 90vh;
+      max-height: calc(100vh - 40px);
       overflow-y: auto;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       border: 1px solid #333;
       animation: slideInUp 0.4s ease-out;
+      margin: auto;
+      position: relative;
     }
 
     .article-detail-header {
@@ -994,6 +1090,7 @@ import { AuthService } from '../../services/auth.service';
 
     .article-detail-body {
       padding: 0 30px 30px;
+      overflow-y: auto;
     }
 
     .article-detail-image {
@@ -1013,10 +1110,9 @@ import { AuthService } from '../../services/auth.service';
     .article-detail-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #ffffff;
       margin-bottom: 15px;
       line-height: 1.2;
-      background: linear-gradient(135deg, #ff69b4, #06b6d4);
+      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -1079,6 +1175,8 @@ import { AuthService } from '../../services/auth.service';
       color: #cccccc;
       line-height: 1.8;
       font-size: 1.05rem;
+      max-height: none;
+      overflow: visible;
     }
 
     .article-detail-content-text p {
@@ -1120,7 +1218,8 @@ import { AuthService } from '../../services/auth.service';
       }
 
       .stat-number {
-        font-size: 2rem;
+        font-size: 4rem;
+        font-weight: bold;
       }
 
       .hero-actions {
@@ -1187,6 +1286,19 @@ import { AuthService } from '../../services/auth.service';
         height: 250px;
       }
     }
+
+      /* Stat Numbers */
+.stat-number {
+  display: block;
+  font-size: 3.5rem; /* increased from 3rem */
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
   `]
 })
 export class BlogComponent implements OnInit {
@@ -1228,14 +1340,23 @@ export class BlogComponent implements OnInit {
     // Load articles from backend API
     this.blogService.getPosts().subscribe({
       next: (articles) => {
+        console.log('Loaded articles from backend:', articles);
         this.articles = articles;
         this.filteredArticles = articles;
       },
       error: (error) => {
-        console.error('Error loading articles:', error);
-        // Fallback to default articles if backend is not available
-        this.setDefaultArticles();
-        this.filteredArticles = this.articles;
+        console.error('Error loading articles from backend:', error);
+        // Only fallback to default articles if backend is completely unavailable
+        // Don't fallback if backend returns empty array - that's valid
+        if (error.status === 0 || error.status >= 500) {
+          console.log('Backend unavailable, using fallback articles');
+          this.setDefaultArticles();
+          this.filteredArticles = this.articles;
+        } else {
+          // Backend is available but returned error - show empty state
+          this.articles = [];
+          this.filteredArticles = [];
+        }
       }
     });
   }
@@ -1276,9 +1397,9 @@ export class BlogComponent implements OnInit {
   }
 
   saveArticles() {
-    // Save articles via backend API instead of localStorage
-    // This method will be updated when backend integration is complete
-    localStorage.setItem('ssc_articles', JSON.stringify(this.articles));
+    // Articles are now saved directly to PostgreSQL via API calls
+    // No need for localStorage - data persists in database
+    console.log('Articles are automatically saved to database via API');
   }
 
   showAuthModal() {
@@ -1347,6 +1468,7 @@ export class BlogComponent implements OnInit {
 
   publishArticle() {
     if (!this.articleForm.title || !this.articleForm.author || !this.articleForm.excerpt || !this.articleForm.body) {
+      alert('Please fill in all required fields');
       return;
     }
 
@@ -1361,64 +1483,64 @@ export class BlogComponent implements OnInit {
     
     const articleData = {
       title: this.articleForm.title,
-      author: authorObj,
+      author: this.articleForm.author, // Send as string, backend will parse
       excerpt: this.articleForm.excerpt,
       content: this.articleForm.body, // API uses 'content' instead of 'body'
-      tags: tagsArray,
-      imageUrl: this.articleForm.image // API uses 'imageUrl' instead of 'image'
-    };
+      tags: this.articleForm.tags, // Send as string, backend will parse
+      imageUrl: this.articleForm.image, // API uses 'imageUrl' instead of 'image'
+      accessCode: this.VALID_ACCESS_CODE // Use stored access code
+    } as any;
 
     if (this.editingArticle) {
-      // Update existing article via API
+      // Update existing article
       this.blogService.updatePost(this.editingArticle.id, articleData).subscribe({
         next: (updatedArticle) => {
           const index = this.articles.findIndex((a: any) => a.id === this.editingArticle.id);
           if (index !== -1) {
             this.articles[index] = updatedArticle;
           }
+          this.filteredArticles = this.articles;
           this.hideEditor();
+          alert('Article updated successfully!');
         },
         error: (error) => {
           console.error('Error updating article:', error);
-          // Fallback to local update
-          const index = this.articles.findIndex((a: any) => a.id === this.editingArticle.id);
-          if (index !== -1) {
-            this.articles[index] = { ...this.editingArticle, ...articleData };
-          }
-          this.saveArticles();
-          this.hideEditor();
+          alert('Failed to update article. Please check your connection and try again.');
         }
       });
     } else {
       // Create new article via simplified API
-      const simpleArticleData = {
-        ...articleData,
-        accessCode: this.accessCode // Include access code for verification
-      };
-      
-      this.blogService.createPostSimple(simpleArticleData).subscribe({
+      this.blogService.createPostSimple(articleData).subscribe({
         next: (newArticle) => {
-          this.articles.unshift(newArticle);
-          this.filteredArticles = this.articles;
+          console.log('Article created successfully:', newArticle);
+          // Reload all articles from API to ensure consistency
+          this.loadArticles();
           this.hideEditor();
+          
+          // Clear the form
+          this.articleForm = {
+            title: '',
+            author: '',
+            excerpt: '',
+            body: '',
+            tags: '',
+            image: ''
+          };
+          
+          // Show success message
+          alert('Article published successfully! Your article has been saved and will persist on refresh.');
         },
         error: (error) => {
           console.error('Error creating article:', error);
-          // Fallback to local creation
-          const newArticle = {
-            id: Date.now(),
-            title: this.articleForm.title,
-            author: this.articleForm.author, // Keep as string for localStorage
-            excerpt: this.articleForm.excerpt,
-            body: this.articleForm.body,
-            tags: tagsArray,
-            image: this.articleForm.image,
-            date: new Date()
-          };
-          this.articles.unshift(newArticle);
-          this.filteredArticles = this.articles;
-          this.saveArticles();
-          this.hideEditor();
+          console.error('Error details:', error.error);
+          if (error.status === 401) {
+            alert('Invalid access code. Please check your access code and try again.');
+          } else if (error.status === 400) {
+            const errorMsg = error.error?.error || 'Please check all fields are filled correctly.';
+            alert(`Validation error: ${errorMsg}`);
+          } else {
+            alert('Failed to publish article. Please check your connection and try again.');
+          }
         }
       });
     }
