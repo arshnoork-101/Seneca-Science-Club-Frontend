@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-team',
   template: `
     <div class="team-container">
-
       <!-- Leadership Team Section -->
       <section class="leadership-section">
         <div class="container">
@@ -280,7 +279,7 @@ export class TeamComponent {
       name: 'Oakar',
       program: 'President',
       funLine: 'Leading the club towards scientific excellence! 🚀',
-      image: ''
+      image: 'https://res.cloudinary.com/da9gwrtit/image/upload/v1756002674/oakar_xxb7zr.jpg'
     },
     {
       name: 'Arshnoor Kaur',
@@ -292,7 +291,7 @@ export class TeamComponent {
       name: 'Majo Mostajo',
       program: 'Treasurer',
       funLine: 'Managing resources for maximum scientific impact! 💰',
-      image: ''
+      image: 'https://res.cloudinary.com/da9gwrtit/image/upload/v1756002674/oakar_xxb7zr.jpg'
     }
   ];
 }
