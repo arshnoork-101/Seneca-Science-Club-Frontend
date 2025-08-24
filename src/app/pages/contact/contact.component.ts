@@ -277,7 +277,7 @@ import { Component } from '@angular/core';
       border-radius: 20px;
       padding: 30px;
       border: 1px solid #333;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      z-index: 2;
     }
 
     .section-title {
@@ -405,6 +405,15 @@ import { Component } from '@angular/core';
         grid-template-columns: 1fr;
       }
     }
+
+    .social-section, .form-section {
+ background: #1a1a1a; 
+   border-radius: 20px;
+   padding: 30px;
+   border: 1px solid #333;
+   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3)
+}
+
   `]
 })
 export class ContactComponent {
