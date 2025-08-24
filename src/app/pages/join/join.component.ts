@@ -49,6 +49,12 @@ import { Component } from '@angular/core';
             direct link
           </a>.
         </p>
+
+        <!-- Example Let's Connect Card -->
+        <div class="connect-card">
+          <h3>Let’s Connect</h3>
+          <p>Follow us on social media and stay updated with events.</p>
+        </div>
       </div>
     </div>
   `,
@@ -139,6 +145,18 @@ import { Component } from '@angular/core';
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
       overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
+
+    /* Let's Connect card — dark, opaque */
+    .connect-card {
+      background-color: #1e1e1e; /* solid dark */
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 25px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+    .connect-card h3 { margin-bottom: 10px; color: #ffffff; }
+    .connect-card p { color: #cccccc; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideInFromLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
